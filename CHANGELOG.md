@@ -3,6 +3,14 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.9.4] - 2026-09-07
+
+### 🛡️ 안정성 및 성능 최적화 (Bug Fix & Optimization)
+- **스토리지 레이스 컨디션 덮어쓰기 버그 원천 수정 (`useLocalStorage.ts`)**:
+  - `isHydratedRef` 하이드레이션 가드를 구축하여, 시작페이지가 닫혀있을 때 툴바 팝업으로 추가한 최신 링크가 새 탭 오픈 시 이전 상태로 덮어씌워지던 문제 해결
+- **기본 프리셋 링크 5개 간소화 (`presetLinks.ts`, `popup.js`)**:
+  - 대표 5개 핵심 사이트(YouTube, GitHub, ChatGPT, Naver, Google)로 가볍게 정리하여 데이터 일원화
+
 ## [1.9.3] - 2026-09-05
 
 ### 📋 로드맵 및 기획 (Planning & Docs)

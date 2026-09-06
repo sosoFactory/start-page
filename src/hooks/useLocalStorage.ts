@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * 로컬스토리지 및 크롬 확장 스토리지와 React 상태를 안전하게 동기화하는 커스텀 훅
@@ -21,23 +21,36 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     }
   });
 
-  // 1. chrome.storage.local 초기 데이터 조회 및 동기화
+  // 크롬 스토리지 비동기 하이드레이션(초기 로딩) 완료 여부 플래그
+  const isHydratedRef = useRef<boolean>(
+    typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local
+  );
+
+  // 1. chrome.storage.local 초기 데이터 조회 및 동기화 (최우선 복원)
   useEffect(() => {
     try {
       if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
         chrome.storage.local.get([key], (result: { [k: string]: any }) => {
           if (result && result[key] !== undefined) {
+            // 크롬 스토리지에 데이터가 있으면 최신 데이터로 상태 및 localStorage 복원
             setStoredValue(result[key] as T);
+            if (typeof window !== 'undefined' && window.localStorage) {
+              window.localStorage.setItem(key, JSON.stringify(result[key]));
+            }
           } else {
-            // 크롬 스토리지가 비어있을 경우 현재 로컬스토리지/초기값으로 동기화
+            // 크롬 스토리지가 완전히 비어있을 경우에만 현재 초기값 저장
             chrome.storage.local.set({ [key]: storedValue });
           }
+          isHydratedRef.current = true;
         });
 
-        // 2. 크롬 툴바 팝업 등 외부에서 데이터가 변경될 때 실시간 수신 리스너
+        // 2. 크롬 툴바 팝업 등 외부에서 데이터가 추가/수정될 때 실시간 동기화 리스너
         const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }, areaName: string) => {
           if (areaName === 'local' && changes[key] && changes[key].newValue !== undefined) {
             setStoredValue(changes[key].newValue as T);
+            if (typeof window !== 'undefined' && window.localStorage) {
+              window.localStorage.setItem(key, JSON.stringify(changes[key].newValue));
+            }
           }
         };
 
@@ -48,16 +61,23 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       }
     } catch (err) {
       console.warn(`크롬 스토리지 연동 예외 ("${key}"):`, err);
+      isHydratedRef.current = true;
     }
   }, [key]);
 
-  // 3. 상태 변경 시 localStorage 및 chrome.storage.local에 동시 저장
+  // 3. 사용자의 명시적 상태 변경 시에만 localStorage 및 chrome.storage.local에 저장 (덮어쓰기 방어)
   useEffect(() => {
     try {
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.setItem(key, JSON.stringify(storedValue));
       }
-      if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      // 크롬 스토리지 로딩이 끝난 이후(isHydratedRef = true)에만 set 실행하여 덮어쓰기 방어
+      if (
+        isHydratedRef.current &&
+        typeof chrome !== 'undefined' &&
+        chrome.storage &&
+        chrome.storage.local
+      ) {
         chrome.storage.local.set({ [key]: storedValue });
       }
     } catch (error) {

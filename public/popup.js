@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (result && Array.isArray(result.saniti_links_v1)) {
         currentLinks = result.saniti_links_v1;
       } else {
-        // 스토리지가 비어있을 경우 기본 링크 불러오기
+        // 스토리지가 비어있을 경우 기본 5개 대표 링크 불러오기
         currentLinks = [
           { id: '1', title: 'YouTube', url: 'https://youtube.com', category: 'all' },
           { id: '2', title: 'GitHub', url: 'https://github.com', category: 'all' },

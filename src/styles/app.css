@@ -695,6 +695,40 @@
   background-color: var(--color-canvas-soft);
 }
 
+/* 버튼 그룹 (Segmented Button Group) */
+.btn-group {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-app-md);
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.btn-group-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: transparent;
+  color: var(--color-slate);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 11px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.btn-group-item:not(:last-child) {
+  border-right: 1px solid var(--color-hairline);
+}
+
+.btn-group-item:hover {
+  color: var(--color-ink);
+  background-color: var(--color-canvas-soft);
+}
+
 /* 모달 내 지역 검색 목록 */
 .region-search-list {
   max-height: 220px;

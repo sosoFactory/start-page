@@ -3,6 +3,14 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.10.1] - 2026-09-07
+
+### 🎨 UI/UX 개선 및 데이터 모델 최적화 (UI & Refactor)
+- **북마크 내보내기/가져오기 버튼 그룹화 (`LinksHub.tsx`, `app.css`)**:
+  - `[ ⬇ 내보내기 | ⬆ 가져오기 ]` 형태의 세그먼트 버튼 그룹(`.btn-group`)을 적용하여 헤더 UI 일체감 개선
+- **북마크 데이터 모델 경량화 (`presetLinks.ts`, `BookmarkModal.tsx`, `popup.js`)**:
+  - 미사용 `category` 속성을 데이터 인터페이스 및 저장소, JSON 입출력에서 완전히 제거하여 필수 3개 속성(`id`, `title`, `url`)으로 간소화
+
 ## [1.10.0] - 2026-09-07
 
 ### ✨ 신규 기능 (Feature)

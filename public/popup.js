@@ -40,8 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const newLink = {
       id: Date.now().toString(),
       title: title,
-      url: url,
-      category: 'all'
+      url: url
     };
 
     try {
@@ -54,11 +53,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         // 스토리지가 비어있을 경우 기본 5개 대표 링크 불러오기
         currentLinks = [
-          { id: '1', title: 'YouTube', url: 'https://youtube.com', category: 'all' },
-          { id: '2', title: 'GitHub', url: 'https://github.com', category: 'all' },
-          { id: '3', title: 'ChatGPT', url: 'https://chatgpt.com', category: 'all' },
-          { id: '4', title: 'Naver', url: 'https://naver.com', category: 'all' },
-          { id: '5', title: 'Google', url: 'https://google.com', category: 'all' }
+          { id: '1', title: 'YouTube', url: 'https://youtube.com' },
+          { id: '2', title: 'GitHub', url: 'https://github.com' },
+          { id: '3', title: 'ChatGPT', url: 'https://chatgpt.com' },
+          { id: '4', title: 'Naver', url: 'https://naver.com' },
+          { id: '5', title: 'Google', url: 'https://google.com' }
         ];
       }
 

@@ -92,7 +92,8 @@ export const LinksHub: React.FC<Props> = ({
   // JSON 내보내기 핸들러
   const handleExportJson = () => {
     try {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(links, null, 2));
+      const exportLinks = links.map(({ id, title, url }) => ({ id, title, url }));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportLinks, null, 2));
       const downloadAnchor = document.createElement('a');
       const now = new Date();
       const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
@@ -130,15 +131,14 @@ export const LinksHub: React.FC<Props> = ({
           return;
         }
 
-        // 유효한 북마크 데이터 검증 및 id 보정
+        // 유효한 북마크 데이터 검증 및 id 보정 (category 필드 완전 배제)
         const validatedLinks: BookmarkLink[] = [];
         for (const item of parsed) {
           if (typeof item === 'object' && item !== null && typeof item.url === 'string' && item.url.trim() !== '') {
             validatedLinks.push({
               id: typeof item.id === 'string' && item.id.trim() !== '' ? item.id : `link-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
               title: typeof item.title === 'string' && item.title.trim() !== '' ? item.title.trim() : '이름 없음',
-              url: item.url.trim(),
-              category: typeof item.category === 'string' ? item.category : 'General'
+              url: item.url.trim()
             });
           }
         }
@@ -226,7 +226,7 @@ export const LinksHub: React.FC<Props> = ({
           </span>
         </div>
 
-        <div className="card-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div className="card-header-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <input
             type="file"
             ref={fileInputRef}
@@ -234,26 +234,28 @@ export const LinksHub: React.FC<Props> = ({
             style={{ display: 'none' }}
             onChange={handleFileChange}
           />
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={handleExportJson}
-            title="북마크 목록을 JSON 파일로 저장합니다"
-            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
-          >
-            <Download size={13} />
-            내보내기
-          </button>
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={handleImportClick}
-            title="JSON 파일에서 북마크 목록을 불러옵니다"
-            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
-          >
-            <Upload size={13} />
-            가져오기
-          </button>
+          <div className="btn-group">
+            <button
+              type="button"
+              className="btn-group-item"
+              onClick={handleExportJson}
+              title="북마크 목록을 JSON 파일로 저장합니다"
+              style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
+            >
+              <Download size={13} />
+              내보내기
+            </button>
+            <button
+              type="button"
+              className="btn-group-item"
+              onClick={handleImportClick}
+              title="JSON 파일에서 북마크 목록을 불러옵니다"
+              style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
+            >
+              <Upload size={13} />
+              가져오기
+            </button>
+          </div>
           <button
             type="button"
             className="btn-primary"

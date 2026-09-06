@@ -57,8 +57,7 @@ export const BookmarkModal: React.FC<Props> = ({
     onSave({
       id: editingLink ? editingLink.id : Date.now().toString(),
       title: finalTitle,
-      url: cleanUrl,
-      category: 'all'
+      url: cleanUrl
     });
 
     onClose();

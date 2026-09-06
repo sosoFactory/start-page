@@ -111,15 +111,80 @@
       color: #16a34a;
       border: 1px solid #bbf7d0;
     }
+    .already-box {
+      padding: 4px 0 0 0;
+    }
+    .already-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background-color: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .already-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+    .already-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .already-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #9a3412;
+      margin-bottom: 2px;
+    }
+    .already-link-name {
+      font-size: 11.5px;
+      color: #c2410c;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .already-desc {
+      font-size: 11.5px;
+      color: #64748b;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .btn-primary-full {
+      width: 100%;
+      background-color: #0f172a;
+      color: #ffffff;
+    }
+    .btn-primary-full:hover {
+      background-color: #1e293b;
+    }
   </style>
 </head>
 <body>
   <div class="popup-header">
     <span class="brand-dot"></span>
-    <h3 class="popup-title">시작화면 바로가기 추가</h3>
+    <h3 class="popup-title">시작화면 바로가기</h3>
   </div>
 
-  <form id="add-form">
+  <!-- 이미 등록된 경우 표시할 안내 박스 -->
+  <div id="already-box" class="already-box" style="display: none;">
+    <div class="already-badge">
+      <span class="already-icon">⭐</span>
+      <div class="already-info">
+        <div class="already-title">이미 등록된 바로가기입니다</div>
+        <div id="already-link-title" class="already-link-name">사이트 이름</div>
+      </div>
+    </div>
+    <p class="already-desc">이 웹사이트는 이미 시작페이지 즐겨찾기 목록에 등록되어 있습니다.</p>
+    <div class="popup-footer">
+      <button type="button" id="btn-already-close" class="btn btn-primary-full">확인</button>
+    </div>
+  </div>
+
+  <!-- 신규 등록 폼 -->
+  <form id="add-form" style="display: none;">
     <div class="form-group">
       <label class="form-label">웹사이트 주소 (URL)</label>
       <input type="text" id="link-url" class="form-input" required readonly style="cursor: not-allowed; opacity: 0.85;">

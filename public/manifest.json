@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Startpage Dashboard",
-  "version": "1.9.4",
+  "version": "1.10.0",
   "description": "Clean & Fast Desktop Browser Start Page Dashboard",
   "icons": {
     "16": "icons/icon16.png",

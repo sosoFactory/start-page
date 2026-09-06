@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
-import { Plus, Edit2, Trash2, Globe } from 'lucide-react';
+import { Plus, Edit2, Trash2, Globe, Download, Upload } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
 
 interface Props {
@@ -67,6 +67,7 @@ export const LinksHub: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<BookmarkLink | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 드래그 앤 드롭 상태
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -86,6 +87,76 @@ export const LinksHub: React.FC<Props> = ({
       const clean = rawUrl.replace(/^https?:\/\//, '').replace(/^www\./, '');
       return { host: clean, path: '' };
     }
+  };
+
+  // JSON 내보내기 핸들러
+  const handleExportJson = () => {
+    try {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(links, null, 2));
+      const downloadAnchor = document.createElement('a');
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `startpage-bookmarks-${dateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    } catch (err) {
+      console.error('Failed to export bookmarks:', err);
+      alert('북마크 내보내기에 실패했습니다.');
+    }
+  };
+
+  // JSON 가져오기 핸들러
+  const handleImportClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const parsed = JSON.parse(content);
+
+        if (!Array.isArray(parsed)) {
+          alert('올바른 JSON 북마크 배열 형식이 아닙니다.');
+          return;
+        }
+
+        // 유효한 북마크 데이터 검증 및 id 보정
+        const validatedLinks: BookmarkLink[] = [];
+        for (const item of parsed) {
+          if (typeof item === 'object' && item !== null && typeof item.url === 'string' && item.url.trim() !== '') {
+            validatedLinks.push({
+              id: typeof item.id === 'string' && item.id.trim() !== '' ? item.id : `link-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+              title: typeof item.title === 'string' && item.title.trim() !== '' ? item.title.trim() : '이름 없음',
+              url: item.url.trim(),
+              category: typeof item.category === 'string' ? item.category : 'General'
+            });
+          }
+        }
+
+        if (validatedLinks.length === 0) {
+          alert('가져올 수 있는 유효한 북마크 링크가 없습니다.');
+          return;
+        }
+
+        if (window.confirm(`총 ${validatedLinks.length}개의 북마크 링크를 가져오시겠습니까?\n(기존 목록이 대체됩니다)`)) {
+          onReorderLinks(validatedLinks);
+        }
+      } catch (err) {
+        console.error('Failed to import bookmarks:', err);
+        alert('JSON 파일을 파싱하는 중 오류가 발생했습니다. 올바른 JSON 파일인지 확인해주세요.');
+      }
+    };
+    reader.readAsText(file);
   };
 
   const handleEdit = (link: BookmarkLink, e: React.MouseEvent) => {
@@ -155,17 +226,47 @@ export const LinksHub: React.FC<Props> = ({
           </span>
         </div>
 
-        <button
-          className="btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
-          onClick={() => {
-            setEditingLink(null);
-            setIsModalOpen(true);
-          }}
-        >
-          <Plus size={14} />
-          바로가기 추가
-        </button>
+        <div className="card-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".json"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleExportJson}
+            title="북마크 목록을 JSON 파일로 저장합니다"
+            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
+          >
+            <Download size={13} />
+            내보내기
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleImportClick}
+            title="JSON 파일에서 북마크 목록을 불러옵니다"
+            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
+          >
+            <Upload size={13} />
+            가져오기
+          </button>
+          <button
+            type="button"
+            className="btn-primary"
+            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
+            onClick={() => {
+              setEditingLink(null);
+              setIsModalOpen(true);
+            }}
+          >
+            <Plus size={14} />
+            바로가기 추가
+          </button>
+        </div>
       </div>
 
       <div className="links-card-body">

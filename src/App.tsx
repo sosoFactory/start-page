@@ -6,6 +6,7 @@ import { PRESET_LINKS, BookmarkLink } from './data/presetLinks';
 import { DEFAULT_REGION, Region } from './data/koreaRegions';
 import { WeatherData, fetchRainWeather } from './services/weatherService';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { SettingsDropdown } from './components/SettingsDropdown';
 import './styles/app.css';
 
 export const App: React.FC = () => {
@@ -65,6 +66,10 @@ export const App: React.FC = () => {
           <span className="brand-dot" />
           <h1 className="header-title">STARTPAGE</h1>
           <span className="header-subtitle">DESKTOP DASHBOARD</span>
+        </div>
+
+        <div className="header-actions">
+          <SettingsDropdown links={links} onImportLinks={setLinks} />
         </div>
       </header>
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
-import { Plus, Edit2, Trash2, Globe, Download, Upload } from 'lucide-react';
+import { Plus, Edit2, Trash2, Globe, Download, Upload, Search, X } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
 
 interface Props {
@@ -67,11 +67,21 @@ export const LinksHub: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<BookmarkLink | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 드래그 앤 드롭 상태
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  // 실시간 검색 필터링
+  const isSearching = searchQuery.trim().length > 0;
+  const filteredLinks = isSearching
+    ? links.filter((link) => {
+        const query = searchQuery.toLowerCase().trim();
+        return link.title.toLowerCase().includes(query) || link.url.toLowerCase().includes(query);
+      })
+    : links;
 
   const formatDisplayUrl = (rawUrl: string) => {
     try {
@@ -222,11 +232,37 @@ export const LinksHub: React.FC<Props> = ({
           <span className="brand-dot" />
           <h2 className="card-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>자주 가는 링크</h2>
           <span className="mono-eyebrow" style={{ marginLeft: '6px', fontFamily: "'Noto Sans KR', sans-serif" }}>
-            {links.length} SITES (DRAG TO REORDER)
+            {isSearching ? `${filteredLinks.length}/${links.length} SITES` : `${links.length} SITES (DRAG TO REORDER)`}
           </span>
         </div>
 
         <div className="card-header-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* 실시간 필터 검색창 */}
+          <div className="links-search-box">
+            <Search size={13} className="links-search-icon" />
+            <input
+              type="text"
+              className="links-search-input"
+              placeholder="바로가기 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setSearchQuery('');
+              }}
+              style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="links-search-clear"
+                onClick={() => setSearchQuery('')}
+                title="검색어 지우기 (ESC)"
+              >
+                <X size={12} />
+              </button>
+            )}
+          </div>
+
           <input
             type="file"
             ref={fileInputRef}
@@ -272,72 +308,91 @@ export const LinksHub: React.FC<Props> = ({
       </div>
 
       <div className="links-card-body">
-        <div className="links-grid">
-          {links.map((link, index) => {
-            const { host, path } = formatDisplayUrl(link.url);
-            const isDragging = draggedIndex === index;
-            const isDragOver = dragOverIndex === index;
+        {filteredLinks.length === 0 ? (
+          <div className="links-empty-search">
+            <Search size={24} style={{ color: 'var(--color-slate-soft)', marginBottom: '8px' }} />
+            <div style={{ fontWeight: 600, color: 'var(--color-ink)', marginBottom: '4px' }}>
+              '{searchQuery}'에 일치하는 바로가기가 없습니다
+            </div>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setSearchQuery('')}
+              style={{ marginTop: '8px', fontSize: '11.5px', padding: '4px 10px', fontFamily: "'Noto Sans KR', sans-serif" }}
+            >
+              전체 바로가기 보기
+            </button>
+          </div>
+        ) : (
+          <div className="links-grid">
+            {filteredLinks.map((link, index) => {
+              const { host, path } = formatDisplayUrl(link.url);
+              const isDragging = draggedIndex === index;
+              const isDragOver = dragOverIndex === index;
 
-            return (
-              <a
-                key={link.id}
-                href={link.url}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => handleDrop(e, index)}
-                onDragEnd={handleDragEnd}
-                className={`link-tile ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
-                title="드래그하여 순서를 바꿀 수 있습니다"
+              return (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  draggable={!isSearching}
+                  onDragStart={(e) => !isSearching && handleDragStart(e, index)}
+                  onDragOver={(e) => !isSearching && handleDragOver(e, index)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => !isSearching && handleDrop(e, index)}
+                  onDragEnd={handleDragEnd}
+                  className={`link-tile ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${isSearching ? 'no-drag' : ''}`}
+                  title={isSearching ? link.title : "드래그하여 순서를 바꿀 수 있습니다"}
+                >
+                  <div className="link-tile-header">
+                    <div className="link-favicon-wrapper">
+                      <FaviconImage url={link.url} title={link.title} />
+                    </div>
+
+                    <div className="link-actions">
+                      <button
+                        className="link-action-btn"
+                        title="수정"
+                        onClick={(e) => handleEdit(link, e)}
+                      >
+                        <Edit2 size={13} />
+                      </button>
+                      <button
+                        className="link-action-btn delete"
+                        title="삭제"
+                        onClick={(e) => handleDelete(link.id, e)}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="link-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>{link.title}</div>
+                  <div className="link-url" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+                    <span className="link-url-host">{host}</span>
+                    {path && <span className="link-url-path">{path}</span>}
+                  </div>
+                </a>
+              );
+            })}
+
+            {/* 새 바로가기 추가 카드 (검색 중이 아닐 때만 노출) */}
+            {!isSearching && (
+              <button
+                className="add-link-tile"
+                onClick={() => {
+                  setEditingLink(null);
+                  setIsModalOpen(true);
+                }}
+                style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
               >
-                <div className="link-tile-header">
-                  <div className="link-favicon-wrapper">
-                    <FaviconImage url={link.url} title={link.title} />
-                  </div>
-
-                  <div className="link-actions">
-                    <button
-                      className="link-action-btn"
-                      title="수정"
-                      onClick={(e) => handleEdit(link, e)}
-                    >
-                      <Edit2 size={13} />
-                    </button>
-                    <button
-                      className="link-action-btn delete"
-                      title="삭제"
-                      onClick={(e) => handleDelete(link.id, e)}
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="link-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>{link.title}</div>
-                <div className="link-url" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
-                  <span className="link-url-host">{host}</span>
-                  {path && <span className="link-url-path">{path}</span>}
-                </div>
-              </a>
-            );
-          })}
-
-          {/* 새 바로가기 추가 카드 */}
-          <button
-            className="add-link-tile"
-            onClick={() => {
-              setEditingLink(null);
-              setIsModalOpen(true);
-            }}
-            style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
-          >
-            <Plus size={20} />
-            <span style={{ fontSize: '12px', fontWeight: 600, fontFamily: "'Noto Sans KR', sans-serif" }}>
-              새 바로가기 추가
-            </span>
-          </button>
-        </div>
+                <Plus size={20} />
+                <span style={{ fontSize: '12px', fontWeight: 600, fontFamily: "'Noto Sans KR', sans-serif" }}>
+                  새 바로가기 추가
+                </span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <BookmarkModal

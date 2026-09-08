@@ -88,10 +88,10 @@ export const App: React.FC = () => {
             type="button"
             className="settings-toggle-btn"
             onClick={() => setIsSettingsOpen(true)}
-            title="대시보드 설정"
             aria-label="설정"
           >
-            <Settings size={15} />
+            <Settings size={14} />
+            <span>설정</span>
           </button>
         </div>
       </header>

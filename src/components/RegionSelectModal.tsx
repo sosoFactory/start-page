@@ -56,7 +56,7 @@ export const RegionSelectModal: React.FC<Props> = ({
             <MapPin size={16} color="var(--color-brand)" />
             <h3 className="modal-title">지역 선택</h3>
           </div>
-          <button className="modal-close-btn" onClick={onClose}>
+          <button className="modal-close-btn" onClick={onClose} data-tooltip="닫기" data-tooltip-pos="bottom-left" aria-label="닫기">
             <X size={18} />
           </button>
         </div>

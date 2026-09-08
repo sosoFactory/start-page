@@ -82,7 +82,7 @@ export const BookmarkModal: React.FC<Props> = ({
                 {editingLink ? '바로가기 수정' : '새 바로가기 추가'}
               </h3>
             </div>
-            <button type="button" className="modal-close-btn" onClick={onClose}>
+            <button type="button" className="modal-close-btn" onClick={onClose} data-tooltip="닫기" data-tooltip-pos="bottom-left" aria-label="닫기">
               <X size={18} />
             </button>
           </div>

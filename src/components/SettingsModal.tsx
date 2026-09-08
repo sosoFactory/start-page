@@ -126,7 +126,7 @@ export const SettingsModal: React.FC<Props> = ({
             <Sliders size={16} color="var(--color-brand)" />
             <h3 className="modal-title">대시보드 설정</h3>
           </div>
-          <button type="button" className="modal-close-btn" onClick={onClose} aria-label="닫기">
+          <button type="button" className="modal-close-btn" onClick={onClose} data-tooltip="닫기" data-tooltip-pos="bottom-left" aria-label="닫기">
             <X size={16} />
           </button>
         </div>

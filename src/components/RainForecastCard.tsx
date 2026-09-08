@@ -86,7 +86,6 @@ export const RainForecastCard: React.FC<Props> = ({
           <button
             className="weather-location-btn"
             onClick={() => setIsRegionModalOpen(true)}
-            title="지역 변경"
           >
             <MapPin size={12} color="var(--color-brand)" />
             <span>{selectedRegion.name}</span>
@@ -96,7 +95,9 @@ export const RainForecastCard: React.FC<Props> = ({
           <button
             className="link-action-btn"
             onClick={onRefresh}
-            title="새로고침"
+            data-tooltip="새로고침"
+            data-tooltip-pos="bottom-left"
+            aria-label="새로고침"
             style={{ padding: '4px' }}
           >
             <RefreshCw size={13} className={loading ? 'spin' : ''} />

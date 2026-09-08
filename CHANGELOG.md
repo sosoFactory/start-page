@@ -3,6 +3,18 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.14.0] - 2026-09-08
+
+### ✨ 신규 기능 및 인터랙션 개선 (Feature & Interaction)
+- **헤더 설정 버튼 텍스트 표기 (`App.tsx`, `app.css`)**:
+  - 대시보드 우측 상단 톱니바퀴 버튼에 **'설정'** 텍스트를 나란히 배치하여 직관성 및 가독성 개선
+- **모던 커스텀 툴팁 시스템 구축 (`app.css`)**:
+  - 브라우저 기본 `title` 속성을 툴팁 도구로 사용하지 않는 원칙 확립
+  - 순수 CSS 기반 `[data-tooltip]` 시스템 구축 (다크 톤 `#0f172a`, 부드러운 페이드인 트랜지션)
+  - `overflow: hidden` 컨테이너 상단 잘림 방지를 위한 `data-tooltip-pos="bottom-left"` 포지셔닝 탑재
+- **텍스트 없는 아이콘 전용 버튼 툴팁 전수 적용 (`RainForecastCard.tsx`, `StockCard.tsx`, `LinksHub.tsx`, 모달들)**:
+  - 날씨/시세 새로고침, 북마크 수정/삭제, 검색어 지우기, 모달 닫기 버튼에 호버 툴팁 적용 완료
+
 ## [1.13.0] - 2026-09-08
 
 ### 🎨 디자인 시스템 및 타이포그래피 개선 (Design System Refactor)

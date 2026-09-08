@@ -71,7 +71,9 @@ export const StockCard: React.FC = () => {
           <button
             className="link-action-btn"
             onClick={loadStockData}
-            title="시세 새로고침"
+            data-tooltip="새로고침"
+            data-tooltip-pos="bottom-left"
+            aria-label="새로고침"
             style={{ padding: '4px', marginLeft: '4px' }}
           >
             <RefreshCw size={12} className={loading ? 'spin' : ''} />

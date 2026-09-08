@@ -186,7 +186,8 @@ export const LinksHub: React.FC<Props> = ({
                 type="button"
                 className="links-search-clear"
                 onClick={() => setSearchQuery('')}
-                title="검색어 지우기 (ESC)"
+                data-tooltip="지우기"
+                aria-label="검색어 지우기"
               >
                 <X size={12} />
               </button>
@@ -244,7 +245,6 @@ export const LinksHub: React.FC<Props> = ({
                   onDrop={(e) => !isSearching && handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
                   className={`link-tile ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${isSearching ? 'no-drag' : ''}`}
-                  title={isSearching ? link.title : "드래그하여 순서를 바꿀 수 있습니다"}
                 >
                   <div className="link-tile-header">
                     <div className="link-favicon-wrapper">
@@ -253,15 +253,19 @@ export const LinksHub: React.FC<Props> = ({
 
                     <div className="link-actions">
                       <button
+                        type="button"
                         className="link-action-btn"
-                        title="수정"
+                        data-tooltip="수정"
+                        aria-label="바로가기 수정"
                         onClick={(e) => handleEdit(link, e)}
                       >
                         <Edit2 size={13} />
                       </button>
                       <button
+                        type="button"
                         className="link-action-btn delete"
-                        title="삭제"
+                        data-tooltip="삭제"
+                        aria-label="바로가기 삭제"
                         onClick={(e) => handleDelete(link.id, e)}
                       >
                         <Trash2 size={13} />

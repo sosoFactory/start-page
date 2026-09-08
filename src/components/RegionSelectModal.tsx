@@ -98,7 +98,7 @@ export const RegionSelectModal: React.FC<Props> = ({
                   }}
                 >
                   <span style={{ fontWeight: 500 }}>{region.name}</span>
-                  <span style={{ fontSize: '11px', color: 'var(--color-mute)', fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--color-mute)' }}>
                     {region.fullName}
                   </span>
                 </div>

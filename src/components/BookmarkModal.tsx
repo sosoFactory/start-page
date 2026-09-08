@@ -78,7 +78,7 @@ export const BookmarkModal: React.FC<Props> = ({
           <div className="modal-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Globe size={16} color="var(--color-brand)" />
-              <h3 className="modal-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <h3 className="modal-title">
                 {editingLink ? '바로가기 수정' : '새 바로가기 추가'}
               </h3>
             </div>
@@ -90,7 +90,7 @@ export const BookmarkModal: React.FC<Props> = ({
           <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {/* 웹사이트 주소 (URL) */}
             <div className="form-group">
-              <label className="form-label" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <label className="form-label">
                 웹사이트 주소 (URL)
               </label>
               <input
@@ -101,13 +101,12 @@ export const BookmarkModal: React.FC<Props> = ({
                 onChange={(e) => setUrl(e.target.value)}
                 required
                 autoFocus
-                style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
               />
             </div>
 
             {/* 사이트 이름 */}
             <div className="form-group">
-              <label className="form-label" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <label className="form-label">
                 사이트 이름
               </label>
               <input
@@ -116,16 +115,15 @@ export const BookmarkModal: React.FC<Props> = ({
                 placeholder="예: 네이버, 깃허브 (비워두면 주소로 대체)"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
               />
             </div>
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn-secondary" onClick={onClose} style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <button type="button" className="btn-secondary" onClick={onClose}>
               취소
             </button>
-            <button type="submit" className="btn-brand" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <button type="submit" className="btn-brand">
               {editingLink ? '저장' : '추가하기'}
             </button>
           </div>

@@ -8,7 +8,7 @@
 ### 1.2 핵심 가치
 - **0초 시작 (Zero Delay)**: 불필요한 네트워크 대기 없이 로컬 퍼스트(Local-First)로 즉각 로드되는 초경량 대시보드.
 - **100vh 무스크롤 압축 뷰포트**: 한 화면에 모든 필수 정보를 밀도 있게 배치하여 스크롤 스트레스 제거.
-- **Saniti 미니멀 디자인**: 정갈한 Noto Sans KR 타이포그래피와 코랄 포인트 컬러(`#f36458`) 기반의 편안한 시각 경험.
+- **Saniti 미니멀 디자인**: 정갈한 Pretendard(프리텐다드) 타이포그래피와 코랄 포인트 컬러(`#f36458`) 기반의 편안하고 세련된 시각 경험.
 - **100% 로컬 데이터 보안**: 모든 북마크 및 설정 데이터를 외부 서버에 전송하지 않고 브라우저 로컬(`localStorage` / `chrome.storage`)에만 안전하게 보관.
 
 ---
@@ -17,6 +17,7 @@
 
 ### 2.1 기술 스택
 - **Frontend Framework**: React 18, TypeScript, Vite
+- **Typography**: Pretendard (가변/웹폰트 단일화, 불필요한 모노폰트 제거)
 - **Data Visualization**: Recharts (강수확률 바 차트, 시장 등락 곡선)
 - **Icons**: Lucide React
 - **Testing**: Vitest, React Testing Library (TDD 원칙 준수)

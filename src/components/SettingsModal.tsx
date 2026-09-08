@@ -124,7 +124,7 @@ export const SettingsModal: React.FC<Props> = ({
         <div className="modal-header">
           <div className="modal-header-left">
             <Sliders size={16} color="var(--color-brand)" />
-            <h3 className="modal-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>대시보드 설정</h3>
+            <h3 className="modal-title">대시보드 설정</h3>
           </div>
           <button type="button" className="modal-close-btn" onClick={onClose} aria-label="닫기">
             <X size={16} />

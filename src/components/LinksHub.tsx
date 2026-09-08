@@ -161,8 +161,8 @@ export const LinksHub: React.FC<Props> = ({
       <div className="card-header">
         <div className="card-header-left">
           <span className="brand-dot" />
-          <h2 className="card-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>자주 가는 링크</h2>
-          <span className="mono-eyebrow" style={{ marginLeft: '6px', fontFamily: "'Noto Sans KR', sans-serif" }}>
+          <h2 className="card-title">자주 가는 링크</h2>
+          <span className="mono-eyebrow" style={{ marginLeft: '6px' }}>
             {isSearching ? `${filteredLinks.length}/${links.length} SITES` : `${links.length} SITES (DRAG TO REORDER)`}
           </span>
         </div>
@@ -180,7 +180,6 @@ export const LinksHub: React.FC<Props> = ({
               onKeyDown={(e) => {
                 if (e.key === 'Escape') setSearchQuery('');
               }}
-              style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
             />
             {searchQuery && (
               <button
@@ -197,7 +196,7 @@ export const LinksHub: React.FC<Props> = ({
           <button
             type="button"
             className="btn-primary"
-            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Noto Sans KR', sans-serif" }}
+            style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
             onClick={() => {
               setEditingLink(null);
               setIsModalOpen(true);
@@ -220,7 +219,7 @@ export const LinksHub: React.FC<Props> = ({
               type="button"
               className="btn-secondary"
               onClick={() => setSearchQuery('')}
-              style={{ marginTop: '8px', fontSize: '11.5px', padding: '4px 10px', fontFamily: "'Noto Sans KR', sans-serif" }}
+              style={{ marginTop: '8px', fontSize: '11.5px', padding: '4px 10px' }}
             >
               전체 바로가기 보기
             </button>
@@ -270,8 +269,8 @@ export const LinksHub: React.FC<Props> = ({
                     </div>
                   </div>
 
-                  <div className="link-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>{link.title}</div>
-                  <div className="link-url" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+                  <div className="link-title">{link.title}</div>
+                  <div className="link-url">
                     <span className="link-url-host">{host}</span>
                     {path && <span className="link-url-path">{path}</span>}
                   </div>
@@ -287,10 +286,9 @@ export const LinksHub: React.FC<Props> = ({
                   setEditingLink(null);
                   setIsModalOpen(true);
                 }}
-                style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
               >
                 <Plus size={20} />
-                <span style={{ fontSize: '12px', fontWeight: 600, fontFamily: "'Noto Sans KR', sans-serif" }}>
+                <span style={{ fontSize: '12px', fontWeight: 600 }}>
                   새 바로가기 추가
                 </span>
               </button>

@@ -52,7 +52,7 @@ export const StockCard: React.FC = () => {
       <div className="card-header">
         <div className="card-header-left">
           <Activity size={16} color="var(--color-brand)" />
-          <h2 className="card-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>주요 시세</h2>
+          <h2 className="card-title">주요 시세</h2>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>

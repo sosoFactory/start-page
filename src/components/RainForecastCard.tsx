@@ -33,7 +33,7 @@ export const RainForecastCard: React.FC<Props> = ({
   if (!weather && loading) {
     return (
       <div className="saniti-card" style={{ minHeight: '330px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ color: 'var(--color-mute)', fontSize: '13px', fontFamily: "'Noto Sans KR', sans-serif" }}>
+        <div style={{ color: 'var(--color-mute)', fontSize: '13px' }}>
           날씨 데이터를 불러오는 중...
         </div>
       </div>
@@ -79,7 +79,7 @@ export const RainForecastCard: React.FC<Props> = ({
       <div className="card-header">
         <div className="card-header-left">
           <CloudSun size={16} color="var(--color-rain-blue)" />
-          <h2 className="card-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>날씨</h2>
+          <h2 className="card-title">날씨</h2>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -87,10 +87,9 @@ export const RainForecastCard: React.FC<Props> = ({
             className="weather-location-btn"
             onClick={() => setIsRegionModalOpen(true)}
             title="지역 변경"
-            style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
           >
             <MapPin size={12} color="var(--color-brand)" />
-            <span style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>{selectedRegion.name}</span>
+            <span>{selectedRegion.name}</span>
             <ChevronDown size={12} />
           </button>
 
@@ -118,13 +117,12 @@ export const RainForecastCard: React.FC<Props> = ({
             }}
           >
             <div className="rain-day-header">
-              <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600, fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600 }}>
                 강수확률
               </span>
               <span
                 className="rain-day-tag"
                 style={{
-                  fontFamily: "'Noto Sans KR', sans-serif",
                   fontSize: '11px',
                   fontWeight: 700,
                   backgroundColor: 'var(--color-ink)',
@@ -139,13 +137,13 @@ export const RainForecastCard: React.FC<Props> = ({
             </div>
 
             <div className="rain-prob-display">
-              <span className={`rain-prob-number ${(weather?.today.maxRainProb || 0) >= 40 ? 'high-prob' : ''}`} style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <span className={`rain-prob-number ${(weather?.today.maxRainProb || 0) >= 40 ? 'high-prob' : ''}`}>
                 {weather?.today.maxRainProb ?? 0}
               </span>
-              <span className="rain-prob-unit" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>%</span>
+              <span className="rain-prob-unit">%</span>
             </div>
 
-            <div className="rain-day-footer" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <div className="rain-day-footer">
               <span style={{ fontWeight: 600 }}>{todayInfo.icon} {todayInfo.label}</span>
               <span style={{ fontWeight: 600, fontSize: '11px', color: 'var(--color-slate)' }}>
                 최저 {weather?.today.tempMin}° · 최고 {weather?.today.tempMax}°
@@ -156,13 +154,12 @@ export const RainForecastCard: React.FC<Props> = ({
           {/* 내일 카드 (보조 표시) */}
           <div className="rain-day-card">
             <div className="rain-day-header">
-              <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600, fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600 }}>
                 강수확률
               </span>
               <span
                 className="rain-day-tag"
                 style={{
-                  fontFamily: "'Noto Sans KR', sans-serif",
                   fontSize: '11px',
                   fontWeight: 500,
                   backgroundColor: 'var(--color-canvas-elevated)',
@@ -176,13 +173,13 @@ export const RainForecastCard: React.FC<Props> = ({
             </div>
 
             <div className="rain-prob-display">
-              <span className={`rain-prob-number ${(weather?.tomorrow.maxRainProb || 0) >= 40 ? 'high-prob' : ''}`} style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+              <span className={`rain-prob-number ${(weather?.tomorrow.maxRainProb || 0) >= 40 ? 'high-prob' : ''}`}>
                 {weather?.tomorrow.maxRainProb ?? 0}
               </span>
-              <span className="rain-prob-unit" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>%</span>
+              <span className="rain-prob-unit">%</span>
             </div>
 
-            <div className="rain-day-footer" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <div className="rain-day-footer">
               <span style={{ fontWeight: 600 }}>{tomorrowInfo.icon} {tomorrowInfo.label}</span>
               <span style={{ fontWeight: 600, fontSize: '11px', color: 'var(--color-slate)' }}>
                 최저 {weather?.tomorrow.tempMin}° · 최고 {weather?.tomorrow.tempMax}°
@@ -194,10 +191,10 @@ export const RainForecastCard: React.FC<Props> = ({
         {/* 48시간 강수확률 시간대별 바 차트 */}
         <div className="rain-chart-container" style={{ flex: 1, minHeight: '130px', display: 'flex', flexDirection: 'column', position: 'relative' }}>
           <div className="rain-chart-header" style={{ marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-slate-soft)', fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-slate-soft)' }}>
               시간대별 강수확률 (오늘~내일 48H)
             </span>
-            <span style={{ fontSize: '11px', color: 'var(--color-slate)', fontWeight: 600, fontFamily: "'Noto Sans KR', sans-serif" }}>
+            <span style={{ fontSize: '11px', color: 'var(--color-slate)', fontWeight: 600 }}>
               현재 {weather?.currentTemp}°C
             </span>
           </div>
@@ -231,7 +228,7 @@ export const RainForecastCard: React.FC<Props> = ({
                         fill={isNow ? '#f36458' : '#64748b'}
                         fontSize={9.5}
                         fontWeight={isNow ? 700 : 500}
-                        fontFamily="'Noto Sans KR', sans-serif"
+                        fontFamily="'Pretendard', sans-serif"
                       >
                         {payload.value}
                       </text>
@@ -255,7 +252,7 @@ export const RainForecastCard: React.FC<Props> = ({
                             padding: '6px 10px',
                             borderRadius: '6px',
                             fontSize: '11px',
-                            fontFamily: "'Noto Sans KR', sans-serif"
+                            fontFamily: "'Pretendard', sans-serif"
                           }}
                         >
                           <div style={{ color: '#64748b', marginBottom: '2px', fontWeight: 600 }}>

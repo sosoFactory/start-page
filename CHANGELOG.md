@@ -3,6 +3,18 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.13.0] - 2026-09-08
+
+### 🎨 디자인 시스템 및 타이포그래피 개선 (Design System Refactor)
+- **전역 기본 폰트 Pretendard(프리텐다드) 100% 단일화 (`index.html`, `saniti-tokens.css`, `popup.html`)**:
+  - 기존 구글 폰트(`IBM Plex Mono`, `Noto Sans KR`) 로드를 완전히 제거하여 로딩 최적화
+  - 가볍고 가독성이 뛰어난 Pretendard 웹폰트 CDN 연결 및 전역 `--font-sans` 설정
+- **모노스페이스 폰트 설정 및 잉여 변수 삭제 (`saniti-tokens.css`, `RegionSelectModal.tsx`)**:
+  - 실제 쓰이지 않던 `--font-mono` 토큰 및 불필요한 인라인 모노 폰트 스타일 완전 삭제
+- **차트 및 컴포넌트 인라인 폰트 전수 정돈 (`RainForecastCard.tsx`, `StockCard.tsx`, `LinksHub.tsx`, `BookmarkModal.tsx`, `SettingsModal.tsx`)**:
+  - Recharts 강수확률 바 차트(`XAxis`, `Tooltip`) 및 시세 차트 폰트를 Pretendard로 통일
+  - 하드코딩되어 있던 Noto Sans KR 인라인 스타일을 전수 제거하여 전역 서체 상속
+
 ## [1.12.1] - 2026-09-08
 
 ### 🐛 버그 수정 및 UI/UX 개선 (Bug Fix & UX Improvement)

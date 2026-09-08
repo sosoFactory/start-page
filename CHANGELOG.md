@@ -3,6 +3,18 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.12.1] - 2026-09-08
+
+### 🐛 버그 수정 및 UI/UX 개선 (Bug Fix & UX Improvement)
+- **헤더 디지털 시계 개방형 대형 타이포그래피 개선 (`HeaderClock.tsx`, `app.css`)**:
+  - 배경 박스 및 테두리를 제거하여 헤더에 자연스럽게 융합되는 미니멀 타이포그래피 적용
+  - 시간 텍스트 크기를 `18px` Bold (`tabular-nums`)로 대폭 확대하여 가시성 극대화
+  - 날짜(`9월 8일 (화)`)와 구분자(`·`) 정돈
+- **설정 모달 헤더 및 데이터 관리 레이아웃 깨짐 수정 (`SettingsModal.tsx`, `app.css`)**:
+  - 모달 헤더 좌측 아이콘과 제목의 `flex` 중앙 수평 정렬(`modal-header-left`) 확립
+  - 북마크 내보내기/가져오기/초기화 행의 설명 텍스트(`flex: 1`)와 버튼 컨테이너(`flex-shrink: 0`, `white-space: nowrap`) 간의 레이아웃 충돌 해결
+  - `btn-secondary` 및 `btn-danger-outline` 인라인 플렉스 버튼 스타일 정립
+
 ## [1.12.0] - 2026-09-08
 
 ### ✨ 신규 기능 (Feature)

@@ -123,10 +123,10 @@ export const SettingsModal: React.FC<Props> = ({
         {/* 모달 헤더 */}
         <div className="modal-header">
           <div className="modal-header-left">
-            <span className="brand-dot" />
+            <Sliders size={16} color="var(--color-brand)" />
             <h3 className="modal-title" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>대시보드 설정</h3>
           </div>
-          <button type="button" className="modal-close-btn" onClick={onClose}>
+          <button type="button" className="modal-close-btn" onClick={onClose} aria-label="닫기">
             <X size={16} />
           </button>
         </div>
@@ -233,14 +233,14 @@ export const SettingsModal: React.FC<Props> = ({
                 <span className="settings-item-label">북마크 백업 및 복원</span>
                 <span className="settings-item-desc">현재 저장된 {links.length}개의 북마크 링크를 JSON으로 내보내거나 가져옵니다</span>
               </div>
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <button type="button" className="btn-secondary" onClick={handleExportJson} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div className="settings-action-btns">
+                <button type="button" className="btn-secondary" onClick={handleExportJson}>
                   <Download size={13} />
-                  내보내기
+                  <span>내보내기</span>
                 </button>
-                <button type="button" className="btn-secondary" onClick={handleImportClick} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <button type="button" className="btn-secondary" onClick={handleImportClick}>
                   <Upload size={13} />
-                  가져오기
+                  <span>가져오기</span>
                 </button>
               </div>
             </div>
@@ -250,10 +250,12 @@ export const SettingsModal: React.FC<Props> = ({
                 <span className="settings-item-label">기본 북마크로 초기화</span>
                 <span className="settings-item-desc">초기 기본 5개 대표 링크(YouTube, GitHub 등) 상태로 되돌립니다</span>
               </div>
-              <button type="button" className="btn-danger-outline" onClick={handleReset} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <RotateCcw size={13} />
-                초기화
-              </button>
+              <div className="settings-action-btns">
+                <button type="button" className="btn-danger-outline" onClick={handleReset}>
+                  <RotateCcw size={13} />
+                  <span>초기화</span>
+                </button>
+              </div>
             </div>
           </div>
 

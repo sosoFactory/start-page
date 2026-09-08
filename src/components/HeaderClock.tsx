@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
 import { DashboardSettings } from '../types/settings';
 
 interface Props {
@@ -48,8 +47,8 @@ export const HeaderClock: React.FC<Props> = ({ settings }) => {
 
   return (
     <div className="header-clock">
-      <Clock size={13} className="header-clock-icon" />
       <span className="header-clock-date">{dateDisplay}</span>
+      <span className="header-clock-divider">·</span>
       <span className="header-clock-time">{timeDisplay}</span>
     </div>
   );

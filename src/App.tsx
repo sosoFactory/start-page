@@ -6,14 +6,21 @@ import { PRESET_LINKS, BookmarkLink } from './data/presetLinks';
 import { DEFAULT_REGION, Region } from './data/koreaRegions';
 import { WeatherData, fetchRainWeather } from './services/weatherService';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { SettingsDropdown } from './components/SettingsDropdown';
+import { DashboardSettings, DEFAULT_SETTINGS } from './types/settings';
+import { HeaderClock } from './components/HeaderClock';
+import { SettingsModal } from './components/SettingsModal';
+import { Settings } from 'lucide-react';
 import './styles/app.css';
 
 export const App: React.FC = () => {
   // 1. 링크 목록 상태 관리
   const [links, setLinks] = useLocalStorage<BookmarkLink[]>('saniti_links_v1', PRESET_LINKS);
 
-  // 2. 날씨 및 지역 상태 관리
+  // 2. 대시보드 환경설정 상태 관리
+  const [settings, setSettings] = useLocalStorage<DashboardSettings>('saniti_settings_v1', DEFAULT_SETTINGS);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // 3. 날씨 및 지역 상태 관리
   const [selectedRegion, setSelectedRegion] = useLocalStorage<Region>('saniti_region_v1', DEFAULT_REGION);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
@@ -58,6 +65,10 @@ export const App: React.FC = () => {
     setLinks(reorderedLinks);
   };
 
+  const handleResetLinks = () => {
+    setLinks(PRESET_LINKS);
+  };
+
   return (
     <div className="dashboard-container">
       {/* 대시보드 상단 헤더 */}
@@ -69,7 +80,19 @@ export const App: React.FC = () => {
         </div>
 
         <div className="header-actions">
-          <SettingsDropdown links={links} onImportLinks={setLinks} />
+          {/* 실시간 시계 위젯 */}
+          <HeaderClock settings={settings} />
+
+          {/* 설정 버튼 */}
+          <button
+            type="button"
+            className="settings-toggle-btn"
+            onClick={() => setIsSettingsOpen(true)}
+            title="대시보드 설정"
+            aria-label="설정"
+          >
+            <Settings size={15} />
+          </button>
         </div>
       </header>
 
@@ -82,6 +105,7 @@ export const App: React.FC = () => {
           onUpdateLink={handleUpdateLink}
           onDeleteLink={handleDeleteLink}
           onReorderLinks={handleReorderLinks}
+          openInNewTab={settings.openInNewTab}
         />
 
         {/* 우측 영역: 38% 위젯 (강수확률 예보 및 주요 시세) */}
@@ -99,6 +123,17 @@ export const App: React.FC = () => {
           <StockCard />
         </div>
       </main>
+
+      {/* 환경설정 및 데이터 관리 모달 */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        links={links}
+        onImportLinks={setLinks}
+        onResetLinks={handleResetLinks}
+        settings={settings}
+        onUpdateSettings={setSettings}
+      />
     </div>
   );
 };

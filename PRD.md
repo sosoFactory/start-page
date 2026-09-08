@@ -51,16 +51,29 @@
    - 검색어 입력 시 우측 원클릭 지우기(`X`) 버튼 및 키보드 `ESC` 키 초기화 지원.
    - 검색 결과 없음 빈 상태 UI 및 검색 중 드래그 정렬 잠금 보호.
 
-### 3.2 ⚙️ 대시보드 우측 상단 설정 드롭다운 (`SettingsDropdown`)
-1. **헤더 설정 버튼**:
-   - 대시보드 최상단 우측에 톱니바퀴(`Settings`) 아이콘의 정갈한 설정 버튼 배치.
-2. **드롭다운 메뉴 기능**:
-   - 설정 버튼 클릭 시 토글되는 세련된 팝오버 메뉴.
-   - **북마크 JSON 내보내기 (`handleExportJson`)**: 현재 저장된 북마크를 `startpage-bookmarks-YYYYMMDD.json` 파일로 즉시 다운로드 백업.
-   - **북마크 JSON 가져오기 (`handleImportJson`)**: 백업 파일 선택 시 유효성 검사 및 확인 대화상자를 거쳐 안전하게 일괄 복원.
-   - 외부 클릭 시 자동으로 닫히는 Backdrop/Click-Outside 핸들링.
+### 3.2 ⚙️ 종합 설정 모달 (`SettingsModal`)
+1. **설정 모달 진입**:
+   - 대시보드 최상단 우측 톱니바퀴(`Settings`) 아이콘 클릭 시 전용 설정 모달 오버레이 오픈.
+2. **일반 설정 (General Settings)**:
+   - **링크 열기 방식**: `현재 탭 (_self, 기본)` vs `새 탭 (_blank)` 선택 지원.
+   - **헤더 시계 표시**: 시계 위젯 표시 토글 (ON / OFF, 기본 ON).
+   - **시간 표기 방식**: `24시간제 (예: 14:30)` vs `12시간제 (예: 오후 2:30)` 선택.
+   - **초(Seconds) 단위 표시**: `14:30:15` vs `14:30` 토글.
+3. **데이터 관리 (Data Management)**:
+   - **북마크 백업 (JSON 내보내기)**: `startpage-bookmarks-YYYYMMDD.json` 파일 생성 및 즉시 다운로드.
+   - **북마크 복원 (JSON 가져오기)**: 파일 선택 및 스키마 검증 후 일괄 복원.
+   - **기본값 초기화**: 확인 대화상자(`window.confirm`) 후 기본 대표 5개 링크로 원클릭 리셋.
+4. **도움말 & 정보 (About & Help)**:
+   - 브라우저 시작 페이지 설정 가이드 (웹 주소 / 확장 프로그램 등록).
+   - 툴바 별(⭐) 아이콘 미니 팝업 1초 등록 활용 팁.
+   - 100% 로컬 스토리지 데이터 보안 안내.
 
-### 3.3 ⭐ 크롬 확장 프로그램 통합 (Extension Integration)
+### 3.3 🕒 헤더 실시간 디지털 시계 (`HeaderClock`)
+1. **실시간 렌더링**:
+   - 대시보드 상단 헤더 우측(설정 버튼 좌측)에 실시간 시계 배치 (1초 단위 자동 갱신).
+   - `DashboardSettings` 설정에 따라 12h/24h 포맷 및 초(Seconds) 표시 동적 반영.
+
+### 3.4 ⭐ 크롬 확장 프로그램 통합 (Extension Integration)
 1. **툴바 별(⭐) 아이콘 미니 팝업 (`popup.html`, `popup.js`)**:
    - 웹서핑 중 툴바 별 아이콘 클릭 시 현재 탭의 URL 및 페이지 제목이 자동 로드됨.
 2. **북마크 중복 감지 및 상태 분기**:
@@ -70,7 +83,7 @@
 3. **무중단 실시간 동기화 (`useLocalStorage.ts`)**:
    - `isHydratedRef` 하이드레이션 가드를 통해 시작 페이지가 닫혀있거나 여러 탭이 열려있어도 스토리지 덮어쓰기 없이 실시간 동기화 보장.
 
-### 3.3 🌦️ 날씨 & 강수확률 예보 위젯 (Sidebar - 상단)
+### 3.5 🌦️ 날씨 & 강수확률 예보 위젯 (Sidebar - 상단)
 1. **상세 지역 날씨 연동**:
    - 대한민국 기상청 단기예보 및 Open-Meteo API 연동.
    - 전국 250+ 시/군/구 및 3,800+ 읍면동 행정구역 검색 및 선택 지원 (기본값: 경기도 고양시 일산동구).
@@ -79,7 +92,7 @@
 3. **48시간 시간대별 강수 바 차트**:
    - 2시간 단위 시간대별 강수확률 시각화 및 현재 시간대 하이라이트.
 
-### 3.4 📈 7대 주요 시장 시세 위젯 (Sidebar - 하단)
+### 3.6 📈 7대 주요 시장 시세 위젯 (Sidebar - 하단)
 1. **7대 핵심 자산 실시간 등락**:
    - 국내 시장: KOSPI, KOSDAQ
    - 해외 시장: S&P 500, NASDAQ, TLT (미국 20년 국채)
@@ -102,18 +115,26 @@ export interface BookmarkLink {
 }
 ```
 
-### 4.2 스토리지 키 관리
+### 4.2 대시보드 환경설정 (`DashboardSettings`)
+```typescript
+export interface DashboardSettings {
+  openInNewTab: boolean;        // 링크 새 탭 열기 여부 (기본: false)
+  showClock: boolean;           // 헤더 시계 표시 여부 (기본: true)
+  clockFormat: '24h' | '12h';   // 시간 포맷 (기본: '24h')
+  showClockSeconds: boolean;    // 초 단위 표시 여부 (기본: true)
+}
+```
+
+### 4.3 스토리지 키 관리
 - `saniti_links_v1`: 북마크 링크 배열 (`BookmarkLink[]`)
-- `saniti_weather_region_v1`: 선택된 날씨 지역 정보 (`RegionInfo`)
-- `saniti_clock_mode_v1`: 시계 표시/포맷 설정 (예정)
+- `saniti_settings_v1`: 대시보드 환경설정 (`DashboardSettings`)
+- `saniti_region_v1`: 선택된 날씨 지역 정보 (`Region`)
 
 ---
 
 ## 5. 향후 로드맵 (Future Roadmap)
 
-- [ ] **실시간 디지털 시계 위젯 (`HeaderClock`)**:
-  - 헤더 우측 상단 실시간 디지털 시계 및 12시간/24시간제 전환 토글 스위치.
-- [ ] **종합 도움말 & 가이드 모달 (`HelpModal`)**:
-  - 헤더 물음표(`?`) 아이콘 및 단축키(`?`, `Ctrl+/`) 지원.
-  - 브라우저 시작 페이지 설정법, 별(⭐) 아이콘 활용법, 로컬스토리지 보안 안내 수록.
+- [x] **실시간 디지털 시계 위젯 (`HeaderClock`)**
+- [x] **종합 설정 및 가이드 모달 (`SettingsModal`)**
+- [ ] **단축키 지원**: `?` 또는 `Ctrl+/` 키로 설정 및 도움말 모달 열기
  

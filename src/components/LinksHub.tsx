@@ -9,6 +9,7 @@ interface Props {
   onUpdateLink: (link: BookmarkLink) => void;
   onDeleteLink: (id: string) => void;
   onReorderLinks: (newLinks: BookmarkLink[]) => void;
+  openInNewTab?: boolean;
 }
 
 // 파비콘 로딩 실패 시 대체 배지를 지원하는 컴포넌트
@@ -63,7 +64,8 @@ export const LinksHub: React.FC<Props> = ({
   onAddLink,
   onUpdateLink,
   onDeleteLink,
-  onReorderLinks
+  onReorderLinks,
+  openInNewTab = false
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<BookmarkLink | null>(null);
@@ -234,6 +236,8 @@ export const LinksHub: React.FC<Props> = ({
                 <a
                   key={link.id}
                   href={link.url}
+                  target={openInNewTab ? '_blank' : '_self'}
+                  rel={openInNewTab ? 'noopener noreferrer' : undefined}
                   draggable={!isSearching}
                   onDragStart={(e) => !isSearching && handleDragStart(e, index)}
                   onDragOver={(e) => !isSearching && handleDragOver(e, index)}

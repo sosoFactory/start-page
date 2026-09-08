@@ -3,6 +3,17 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.15.0] - 2026-09-08
+
+### ♻️ 코드 구조 리팩토링 및 모달 UX 개선 (Refactor & UX Improvement)
+- **공통 기반 모달 컴포넌트 구축 (`components/common/Modal.tsx`)**:
+  - `BookmarkModal`, `RegionSelectModal`, `SettingsModal`의 공통 오버레이, 헤더(아이콘+타이틀+닫기버튼), 본문, 푸터 구조를 단일 컴포넌트로 일원화
+  - `ESC` 키보드 닫기 이벤트 리스너 자동 관리 및 인풋 드래그 오작동 방지 배경 클릭 감지 내장
+- **자연스럽고 부드러운 모달 팝업 애니메이션 (`app.css`)**:
+  - 오버레이 페이드인(`modalOverlayFadeIn`) 및 다이얼로그 스케일 팝인(`modalDialogPopIn`) 적용
+- **전체 모달 컴포넌트 전면 리팩토링 (`BookmarkModal.tsx`, `RegionSelectModal.tsx`, `SettingsModal.tsx`)**:
+  - 중복 보일러플레이트 코드를 제거하고 공통 `Modal` 컴포넌트로 마크업 단일화
+
 ## [1.14.0] - 2026-09-08
 
 ### ✨ 신규 기능 및 인터랙션 개선 (Feature & Interaction)

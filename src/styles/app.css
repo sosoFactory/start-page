@@ -793,23 +793,49 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(17, 24, 39, 0.4);
+  background-color: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
+  animation: modalOverlayFadeIn 0.18s ease-out forwards;
 }
 
 .modal-content {
   background-color: #ffffff;
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-app-lg);
-  width: 480px;
-  max-width: 90vw;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-sans);
+  animation: modalDialogPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalDialogPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .modal-header {
@@ -849,6 +875,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .form-group {

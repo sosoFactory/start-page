@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
 import { normalizeUrl } from '../utils/urlHelper';
-import { X, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Modal } from './common/Modal';
 
 interface Props {
   isOpen: boolean;
@@ -29,23 +30,6 @@ export const BookmarkModal: React.FC<Props> = ({
     }
   }, [editingLink, isOpen]);
 
-  // ESC 키 닫기 이벤트 리스너
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanUrl = normalizeUrl(url);
@@ -64,71 +48,53 @@ export const BookmarkModal: React.FC<Props> = ({
   };
 
   return (
-    <div
-      className="modal-overlay"
-      onMouseDown={(e) => {
-        // 모달 외부 배경을 직접 클릭했을 때만 닫기 (인풋창 텍스트 드래그 시 닫힘 방어)
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={editingLink ? '바로가기 수정' : '새 바로가기 추가'}
+      icon={<Globe size={16} color="var(--color-brand)" />}
+      footer={
+        <>
+          <button type="button" className="btn-secondary" onClick={onClose}>
+            취소
+          </button>
+          <button type="submit" form="bookmark-form" className="btn-brand">
+            {editingLink ? '저장' : '추가하기'}
+          </button>
+        </>
+      }
     >
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <form onSubmit={handleSubmit}>
-          <div className="modal-header">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Globe size={16} color="var(--color-brand)" />
-              <h3 className="modal-title">
-                {editingLink ? '바로가기 수정' : '새 바로가기 추가'}
-              </h3>
-            </div>
-            <button type="button" className="modal-close-btn" onClick={onClose} data-tooltip="닫기" data-tooltip-pos="bottom-left" aria-label="닫기">
-              <X size={18} />
-            </button>
-          </div>
+      <form id="bookmark-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {/* 웹사이트 주소 (URL) */}
+        <div className="form-group">
+          <label className="form-label">
+            웹사이트 주소 (URL)
+          </label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="예: naver.com, https://github.com"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            required
+            autoFocus
+          />
+        </div>
 
-          <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* 웹사이트 주소 (URL) */}
-            <div className="form-group">
-              <label className="form-label">
-                웹사이트 주소 (URL)
-              </label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="예: naver.com, https://github.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                required
-                autoFocus
-              />
-            </div>
-
-            {/* 사이트 이름 */}
-            <div className="form-group">
-              <label className="form-label">
-                사이트 이름
-              </label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="예: 네이버, 깃허브 (비워두면 주소로 대체)"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="modal-footer">
-            <button type="button" className="btn-secondary" onClick={onClose}>
-              취소
-            </button>
-            <button type="submit" className="btn-brand">
-              {editingLink ? '저장' : '추가하기'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {/* 사이트 이름 */}
+        <div className="form-group">
+          <label className="form-label">
+            사이트 이름
+          </label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="예: 네이버, 깃허브 (비워두면 주소로 대체)"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+      </form>
+    </Modal>
   );
 };

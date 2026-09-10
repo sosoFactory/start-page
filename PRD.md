@@ -23,7 +23,7 @@
 - **Testing**: Vitest, React Testing Library (TDD 원칙 준수)
 
 ### 2.2 실행 및 배포 형태
-1. **GitHub Pages 웹 애플리케이션**: URL(`https://haksoo0918.github.io/start-page/`) 접속을 통한 브라우저 홈/시작 페이지 등록.
+1. **GitHub Pages 웹 애플리케이션**: URL(`https://sosofactory.github.io/start-page/`) 접속을 통한 브라우저 홈/시작 페이지 등록.
 2. **크롬 확장 프로그램 (Manifest V3)**:
    - `chrome_url_overrides.newtab`: 새 탭(`Ctrl + T`) 오픈 시 대시보드 즉시 로드.
    - `action.default_popup`: 브라우저 툴바 별(⭐) 아이콘 클릭 시 현재 페이지를 1초 만에 바로가기에 추가하는 미니 팝업.

@@ -178,7 +178,7 @@
 
 ### 📖 문서화 완성 (Docs)
 - **종합 [README.md](README.md) 완성**:
-  - [방법 1] GitHub Pages 웹 주소(`https://haksoo0918.github.io/start-page/`)를 통한 브라우저 홈 설정 가이드 및 GitHub Pages 1회 활성화 단계별 안내
+  - [방법 1] GitHub Pages 웹 주소(`https://sosofactory.github.io/start-page/`)를 통한 브라우저 홈 설정 가이드 및 GitHub Pages 1회 활성화 단계별 안내
   - [방법 2] 크롬 확장 프로그램 등록 가이드 (로컬/오프라인 새 탭 오버라이드)
   - 새 탭(`Ctrl+T`) 단축키 연동 팁 (*New Tab Redirect* 활용)
 

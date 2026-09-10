@@ -6,7 +6,7 @@
 
 ## 🌐 접속 주소 (Live Demo)
 
-- 🔗 **대시보드 바로가기**: **[https://haksoo0918.github.io/start-page/](https://haksoo0918.github.io/start-page/)**
+- 🔗 **대시보드 바로가기**: **[https://sosofactory.github.io/start-page/](https://sosofactory.github.io/start-page/)**
 
 ---
 
@@ -67,13 +67,13 @@
 - **Chrome (크롬)**:
   1. 우측 상단 `⋮` ➔ **[설정]** ➔ 좌측 **[시작 그룹]** 클릭
   2. **`특정 페이지 또는 페이지 모음 열기`** 선택 ➔ **`새 페이지 추가`** 클릭
-  3. URL 입력: `https://haksoo0918.github.io/start-page/`
+  3. URL 입력: `https://sosofactory.github.io/start-page/`
 - **Edge (엣지)**:
   1. 우측 상단 `...` ➔ **[설정]** ➔ 좌측 **[시작, 홈 및 새 탭]** 클릭
   2. **`Edge가 시작될 때`** 항목에서 **`다음 페이지를 열 수 있음`** 선택 ➔ URL 입력
 
 > 💡 **새 탭(`Ctrl + T`)을 열 때마다 이 화면이 뜨게 하려면?**
-> 크롬 웹스토어에서 무료 공식 확장 프로그램인 **[New Tab Redirect]** 설치 후, 주소 칸에 `https://haksoo0918.github.io/start-page/`를 넣으시면 새 탭을 누를 때마다 이 시작 페이지가 0초 만에 열립니다.
+> 크롬 웹스토어에서 무료 공식 확장 프로그램인 **[New Tab Redirect]** 설치 후, 주소 칸에 `https://sosofactory.github.io/start-page/`를 넣으시면 새 탭을 누를 때마다 이 시작 페이지가 0초 만에 열립니다.
 
 ### 🚀 [방법 2] 크롬 확장 프로그램으로 등록하기 (오프라인 / 로컬 네이티브 새 탭)
 

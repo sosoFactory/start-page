@@ -40,9 +40,12 @@
 2. **HTML5 네이티브 드래그 앤 드롭 (Drag & Drop Reorder)**:
    - 타일을 마우스로 끌어서 자유롭게 순서 재배치 가능.
    - 배열 인덱스 순서 그대로 로컬 스토리지에 영속 저장.
-3. **파비콘 로딩 회복성 (Favicon Fallback)**:
-   - Google S2 Favicon 서비스 연동 (`https://www.google.com/s2/favicons?domain=...`).
-   - 파비콘 로딩 실패 또는 네트워크 미연결 시 지구본/이니셜 배지로 자동 전환.
+3. **다단계 파비콘 폴백 및 스마트 이니셜 배지 (Multi-stage Favicon Fallback & Smart Initial Badge)**:
+   - **4단계 폴백 파이프라인**: 1차 Google S2 Favicon API ➔ 2차 DuckDuckGo Icons API ➔ 3차 루트 `favicon.ico` 직접 조회 ➔ 4차 스마트 이니셜 배지 순차 시도.
+   - **스마트 이니셜 규칙**:
+     - **한글 사이트**: 첫 1글자 추출 (예: `네이버` ➔ `네`, `카카오` ➔ `카`).
+     - **영문 사이트**: 2글자 조합 (복합어/공백/대문자 분기는 단어별 앞 글자 조합 예: `GitHub` ➔ `GH`, `Stack Overflow` ➔ `SO` / 단일 단어는 앞 2글자 대문자 예: `Notion` ➔ `NO`).
+   - **해시 기반 파스텔 배지 테마**: 사이트 이름 문자열 해시를 통해 일관된 7대 감각적인 배경/텍스트 테마 컬러를 자동 부여하여 심미성 극대화.
 4. **바로가기 관리 모달 (`BookmarkModal`)**:
    - URL 입력 시 프로토콜(`https://`) 자동 정규화 및 사이트명 자동 파싱.
    - 추가 및 수정 시 유효성 검사 및 실시간 반영.

@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
-import { Plus, Edit2, Trash2, Globe, Search, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
+import {
+  extractDomain,
+  getFaviconSources,
+  getCachedFavicon,
+  setCachedFavicon,
+  getSmartInitial,
+  getInitialBadgeTheme
+} from '../utils/faviconHelper';
 
 interface Props {
   links: BookmarkLink[];
@@ -12,52 +20,77 @@ interface Props {
   openInNewTab?: boolean;
 }
 
-// 파비콘 로딩 실패 시 대체 배지를 지원하는 컴포넌트
+// 파비콘 3단계 폴백 및 스마트 이니셜 배지를 지원하는 컴포넌트
 const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) => {
-  const [error, setError] = useState(false);
+  const domain = extractDomain(url);
+  const sources = getFaviconSources(url);
+  const cached = domain ? getCachedFavicon(domain) : null;
 
-  const getFaviconUrl = (targetUrl: string) => {
-    try {
-      const domain = new URL(targetUrl).hostname;
-      return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-    } catch {
-      return '';
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const [useInitial, setUseInitial] = useState(() => Boolean(cached?.useInitial || sources.length === 0));
+
+  // url 변경 시 상태 리셋
+  useEffect(() => {
+    const currentCached = domain ? getCachedFavicon(domain) : null;
+    if (currentCached?.useInitial || sources.length === 0) {
+      setUseInitial(true);
+    } else {
+      setUseInitial(false);
+      setSourceIndex(0);
+    }
+  }, [url, domain]);
+
+  const handleError = () => {
+    if (sourceIndex + 1 < sources.length) {
+      setSourceIndex(prev => prev + 1);
+    } else {
+      setUseInitial(true);
+      if (domain) {
+        setCachedFavicon(domain, { useInitial: true });
+      }
     }
   };
 
-  const faviconSrc = getFaviconUrl(url);
+  const handleLoad = () => {
+    if (domain && sources[sourceIndex]) {
+      setCachedFavicon(domain, { src: sources[sourceIndex] });
+    }
+  };
 
-  if (error || !faviconSrc) {
+  if (useInitial || !sources[sourceIndex]) {
+    const initialText = getSmartInitial(title, url);
+    const theme = getInitialBadgeTheme(title || domain || 'default');
+    const isSingleChar = initialText.length === 1;
+
     return (
       <div
+        className="link-favicon-badge"
         style={{
-          width: '20px',
-          height: '20px',
-          borderRadius: '4px',
-          backgroundColor: 'var(--color-canvas-elevated)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '11px',
-          fontWeight: 700,
-          color: 'var(--color-brand)'
+          backgroundColor: theme.bg,
+          color: theme.color,
+          fontSize: isSingleChar ? '11px' : '9.5px'
         }}
+        title={title || domain}
       >
-        <Globe size={13} color="var(--color-slate-soft)" />
+        {initialText}
       </div>
     );
   }
 
+  const currentSrc = cached?.src || sources[sourceIndex];
+
   return (
     <img
-      src={faviconSrc}
+      src={currentSrc}
       alt={title}
       className="link-favicon"
-      onError={() => setError(true)}
+      onError={handleError}
+      onLoad={handleLoad}
       loading="lazy"
     />
   );
 };
+
 
 export const LinksHub: React.FC<Props> = ({
   links,

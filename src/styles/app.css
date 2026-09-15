@@ -457,6 +457,21 @@
   object-fit: contain;
 }
 
+.link-favicon-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  user-select: none;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
 .link-actions {
   display: flex;
   align-items: center;

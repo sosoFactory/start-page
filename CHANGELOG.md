@@ -3,6 +3,18 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.16.0] - 2026-09-15
+
+### ✨ 신규 기능 (Feature)
+- **다단계 파비콘 폴백 체인 구축 (`utils/faviconHelper.ts`, `components/LinksHub.tsx`)**:
+  - 1차 Google S2(64px) ➔ 2차 DuckDuckGo Icons ➔ 3차 직접 도메인 루트(`/favicon.ico`)의 3단계 순차 폴백 로직 적용
+- **스마트 이니셜 배지 (Smart Initial Badge) 시스템 구축 (`utils/faviconHelper.ts`, `app.css`)**:
+  - 파비콘이 없거나 모든 소스 로드 실패 시 직관적인 이니셜 배지 렌더링
+  - 한글 첫 1글자(`네이버` ➔ `네`), 영문 복합어/공백/하이픈 앞글자(`Stack Overflow` ➔ `SO`), CamelCase(`GitHub` ➔ `GH`), 영문 단일 단어 앞 2글자(`Notion` ➔ `NO`) 자동 추출
+  - 도메인/타이틀 해시 기반의 7대 파스텔 브랜드 테마 색상 자동 배정
+- **인메모리 세션 캐싱 최적화 (`utils/faviconHelper.ts`)**:
+  - 세션 동안 성공한 파비콘 URL 및 배지 전환 여부를 캐시하여 렌더링 시 불필요한 반복 404 재요청 방지
+
 ## [1.15.0] - 2026-09-08
 
 ### ♻️ 코드 구조 리팩토링 및 모달 UX 개선 (Refactor & UX Improvement)

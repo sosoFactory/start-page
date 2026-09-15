@@ -8,7 +8,8 @@ import {
   getCachedFavicon,
   setCachedFavicon,
   getSmartInitial,
-  getInitialBadgeTheme
+  getInitialBadgeTheme,
+  isDefaultGlobeImage
 } from '../utils/faviconHelper';
 
 interface Props {
@@ -55,18 +56,23 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
     handleNextSource();
   };
 
-  const handleLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleLoad = async (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const img = e.currentTarget;
     const currentSrc = sources[sourceIndex] || '';
 
-    // Google S2 API(&sz=64)는 파비콘이 없을 때 16x16 크기(726B)의 기본 회색 지구본 PNG를 반환함
-    const isGoogleS2 = currentSrc.includes('google.com/s2/favicons');
-    const isDefaultGlobe = isGoogleS2 && (img.naturalWidth <= 16 || img.naturalHeight <= 16);
-
-    // 유효하지 않은 크기이거나 기본 지구본 플레이스홀더인 경우 다음 소스(자체 루트 favicon) 또는 배지로 폴백
-    if (img.naturalWidth === 0 || img.naturalHeight === 0 || isDefaultGlobe) {
+    if (img.naturalWidth === 0 || img.naturalHeight === 0) {
       handleNextSource();
       return;
+    }
+
+    // Google S2 API(&sz=64)에서 16x16으로 반환된 경우, 726 바이트 기본 회색 지구본인지 정밀 판별 (Tina 같은 진짜 16x16 파비콘은 보존)
+    const isGoogleS2 = currentSrc.includes('google.com/s2/favicons');
+    if (isGoogleS2 && img.naturalWidth === 16 && img.naturalHeight === 16) {
+      const isGlobe = await isDefaultGlobeImage(currentSrc);
+      if (isGlobe) {
+        handleNextSource();
+        return;
+      }
     }
 
     if (domain && currentSrc) {

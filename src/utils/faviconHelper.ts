@@ -38,6 +38,19 @@ export const getCachedFavicon = (domain: string) => {
 };
 
 /**
+ * Google S2의 726 바이트 기본 회색 지구본 PNG인지 정밀 확인
+ */
+export const isDefaultGlobeImage = async (src: string): Promise<boolean> => {
+  try {
+    const res = await fetch(src);
+    const blob = await res.blob();
+    return blob.size === 726;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * 파비콘 캐시 저장
  */
 export const setCachedFavicon = (domain: string, result: { src?: string; useInitial?: boolean }) => {

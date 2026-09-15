@@ -3,6 +3,13 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.18.2] - 2026-09-15
+
+### 🐛 버그 수정 (Bug Fix)
+- **16x16 고유 파비콘(Tina 등) 보존 및 Google S2 기본 지구본 정밀 감별 (`utils/faviconHelper.ts`, `components/LinksHub.tsx`)**:
+  - Google S2에서 `16x16` 크기로 반환되는 파비콘 중, 파비콘 부재 시 반환되는 726 바이트 기본 회색 지구본 PNG를 정밀 비교하는 `isDefaultGlobeImage` 검증 탑재
+  - Tina(`tinacms.org`, 573B) 등 원본이 16x16인 정상 사이트의 고유 파비콘을 지구본으로 오인하지 않고 온전히 보존하며, 파비콘 미등록 사이트(`haksoo0918.github.io`, 726B)만 스마트 이니셜 배지로 정확히 전환
+
 ## [1.18.1] - 2026-09-15
 
 ### 🐛 버그 수정 및 UI 가시성 개선 (Bug Fix & UX Improvement)

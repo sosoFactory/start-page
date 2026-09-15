@@ -41,8 +41,10 @@
    - 타일을 마우스로 끌어서 자유롭게 순서 재배치 가능.
    - 배열 인덱스 순서 그대로 로컬 스토리지에 영속 저장.
 3. **다단계 파비콘 폴백 및 스마트 이니셜 배지 (Multi-stage Favicon Fallback & Smart Initial Badge)**:
-   - **3단계 클린 폴백 파이프라인**: 1차 Google S2 Favicon API ➔ 2차 루트 `favicon.ico` 직접 조회 ➔ 3차 스마트 이니셜 배지 순차 시도 (가짜 회색 원형 플레이스홀더를 유발하는 DuckDuckGo 완전 배제).
-   - **Google S2 기본 플레이스홀더 감지 (Default Globe Filtering)**: `&sz=64` 요청 시 정상 아이콘(`>16px`)이 아닌 16x16 회색 지구본 PNG(`726B`)가 내려올 경우 즉시 파비콘 부재로 판별하고 2차 루트 조회 후 스마트 이니셜 배지로 신속 전환.
+   - **클린 폴백 파이프라인**: 1차 Google Favicon V2 ➔ 2차 상위 루트 도메인 Favicon V2 (서브도메인 브랜드 상속) ➔ 3차 직접 도메인 루트 `/favicon.ico` ➔ 4차 스마트 이니셜 배지 순차 시도.
+   - **멀티 테넌트 호스팅 플랫폼 상속 제외 (Multi-tenant Platform Exclusion)**:
+     - `github.io`, `vercel.app`, `netlify.app`, `pages.dev`, `tistory.com`, `notion.site` 등 독립 프로젝트/블로그 호스팅 플랫폼은 상위 플랫폼 파비콘(예: 깃허브 옥토캣 마크 등) 상속을 차단하고, 자체 파비콘 부재 시 즉시 사이트명에 맞는 **스마트 이니셜 배지(예: `비트코인 퀀트 전략` ➔ `비`)**로 폴백.
+   - **Google S2/FaviconV2 기본 지구본 감지 (Default Globe Filtering)**: `&sz=64` 요청 시 726 바이트 기본 회색 지구본 PNG가 내려올 경우 즉시 파비콘 부재로 판별하고 스마트 이니셜 배지로 신속 전환.
    - **스마트 이니셜 규칙**:
      - **한글 사이트**: 첫 1글자 추출 (예: `네이버` ➔ `네`, `카카오` ➔ `카`, `비트코인 퀀트 전략` ➔ `비`).
      - **영문 사이트**: 2글자 조합 (복합어/공백/대문자 분기는 단어별 앞 글자 조합 예: `GitHub` ➔ `GH`, `Stack Overflow` ➔ `SO` / 단일 단어는 앞 2글자 대문자 예: `Notion` ➔ `NO`).

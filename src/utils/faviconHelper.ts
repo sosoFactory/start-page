@@ -18,15 +18,42 @@ export const extractDomain = (url: string): string => {
 };
 
 /**
- * 루트 도메인 추출 헬퍼 (서브도메인 폴백용)
+ * 서브도메인이 독립된 개별 프로젝트/블로그인 멀티 테넌트 호스팅 플랫폼 목록
+ * 이 플랫폼들은 상위 도메인의 파비콘(예: github.io 옥토캣 로고 등)을 상속받지 않고 스마트 이니셜 배지로 폴백합니다.
+ */
+export const MULTI_TENANT_HOSTS = new Set([
+  'github.io',
+  'gitlab.io',
+  'vercel.app',
+  'netlify.app',
+  'pages.dev',
+  'web.app',
+  'firebaseapp.com',
+  'surge.sh',
+  'render.com',
+  'tistory.com',
+  'notion.site',
+  'blogspot.com',
+  'wordpress.com'
+]);
+
+/**
+ * 루트 도메인 추출 헬퍼 (서브도메인 브랜드 폴백용)
  */
 export const getRootDomain = (domain: string): string => {
   const parts = domain.split('.');
   if (parts.length > 2) {
+    let candidate = parts.slice(-2).join('.');
     if (['co.kr', 'or.kr', 'ne.kr', 're.kr', 'pe.kr', 'go.kr'].some(cctld => domain.endsWith(cctld))) {
-      return parts.slice(-3).join('.');
+      candidate = parts.slice(-3).join('.');
     }
-    return parts.slice(-2).join('.');
+
+    // 멀티 테넌트 호스팅 플랫폼인 경우 상위 플랫폼 파비콘 상속 제외
+    if (MULTI_TENANT_HOSTS.has(candidate)) {
+      return domain;
+    }
+
+    return candidate;
   }
   return domain;
 };

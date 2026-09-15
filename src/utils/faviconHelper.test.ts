@@ -28,10 +28,16 @@ describe('faviconHelper', () => {
       expect(sources[1]).toBe('https://github.com/favicon.ico');
       expect(sources[2]).toContain('google.com/s2/favicons');
 
+      // 일반 서브도메인은 상위 루트 도메인 상속 포함 (4개 소스)
       const subSources = getFaviconSources('https://app.tina.io');
       expect(subSources).toHaveLength(4);
       expect(subSources[0]).toContain('url=https://app.tina.io');
       expect(subSources[1]).toContain('url=https://tina.io');
+
+      // 멀티테넌트 호스팅 플랫폼(github.io 등)은 상위 옥토캣 상속 제외 (3개 소스)
+      const githubIoSources = getFaviconSources('https://haksoo0918.github.io/quant-bitcoin/');
+      expect(githubIoSources).toHaveLength(3);
+      expect(githubIoSources.some(s => s.includes('url=https://github.io'))).toBe(false);
     });
   });
 

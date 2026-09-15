@@ -3,6 +3,14 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.18.4] - 2026-09-15
+
+### 🐛 버그 수정 및 파비콘 리졸버 정교화 (Bug Fix & Favicon Improvement)
+- **멀티 테넌트 호스팅 플랫폼 상위 파비콘 상속 제외 및 스마트 이니셜 배지 적용 (`utils/faviconHelper.ts`)**:
+  - `github.io`, `gitlab.io`, `vercel.app`, `netlify.app`, `pages.dev`, `web.app`, `firebaseapp.com`, `surge.sh`, `render.com`, `tistory.com`, `notion.site`, `blogspot.com`, `wordpress.com` 등 멀티 테넌트/블로그 플랫폼을 `MULTI_TENANT_HOSTS`로 정의
+  - 멀티 테넌트 서브도메인(`haksoo0918.github.io` 등)에 자체 파비콘이 없을 경우 상위 호스팅 도메인(GitHub 옥토캣 로고 등)을 상속받지 않고 **스마트 이니셜 배지(`비`)**로 정확하게 표시
+  - 일반 브랜드 서브도메인(`app.tina.io` 등)은 상위 메인 도메인의 고화질 브랜드 파비콘을 정상 상속하도록 분리 유지
+
 ## [1.18.3] - 2026-09-15
 
 ### 🐛 버그 수정 및 파비콘 리졸버 개선 (Bug Fix & Favicon Improvement)

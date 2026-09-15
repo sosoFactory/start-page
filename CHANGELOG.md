@@ -3,6 +3,13 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.16.1] - 2026-09-15
+
+### 🐛 버그 수정 (Bug Fix)
+- **Google S2 기본 회색 지구본(Default Globe) 감지 및 자동 폴백 (`components/LinksHub.tsx`, `PRD.md`)**:
+  - Google S2 Favicon API가 파비콘 미등록 도메인에 대해 에러 대신 16x16 크기의 기본 회색 지구본 PNG를 반환하여 정상 로드로 오인되던 문제 해결
+  - `img.onLoad` 시점에 16x16 기본 플레이스홀더를 감지하여 2차 DuckDuckGo ➔ 3차 루트 파비콘 ➔ 최종 스마트 이니셜 배지로 정상 자동 폴백되도록 수정
+
 ## [1.16.0] - 2026-09-15
 
 ### ✨ 신규 기능 (Feature)

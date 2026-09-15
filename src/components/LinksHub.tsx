@@ -40,7 +40,7 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
     }
   }, [url, domain]);
 
-  const handleError = () => {
+  const handleNextSource = () => {
     if (sourceIndex + 1 < sources.length) {
       setSourceIndex(prev => prev + 1);
     } else {
@@ -51,9 +51,25 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
     }
   };
 
-  const handleLoad = () => {
-    if (domain && sources[sourceIndex]) {
-      setCachedFavicon(domain, { src: sources[sourceIndex] });
+  const handleError = () => {
+    handleNextSource();
+  };
+
+  const handleLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const img = e.currentTarget;
+    const currentSrc = sources[sourceIndex] || '';
+
+    // Google S2 API(&sz=64)는 파비콘이 없을 때 16x16 크기의 기본 회색 지구본 PNG를 반환함
+    const isGoogleS2 = currentSrc.includes('google.com/s2/favicons');
+    const isDefaultGlobe = isGoogleS2 && img.naturalWidth === 16 && img.naturalHeight === 16;
+
+    if (img.naturalWidth === 0 || img.naturalHeight === 0 || isDefaultGlobe) {
+      handleNextSource();
+      return;
+    }
+
+    if (domain && currentSrc) {
+      setCachedFavicon(domain, { src: currentSrc });
     }
   };
 

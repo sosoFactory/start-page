@@ -42,6 +42,7 @@
    - 배열 인덱스 순서 그대로 로컬 스토리지에 영속 저장.
 3. **다단계 파비콘 폴백 및 스마트 이니셜 배지 (Multi-stage Favicon Fallback & Smart Initial Badge)**:
    - **4단계 폴백 파이프라인**: 1차 Google S2 Favicon API ➔ 2차 DuckDuckGo Icons API ➔ 3차 루트 `favicon.ico` 직접 조회 ➔ 4차 스마트 이니셜 배지 순차 시도.
+   - **Google S2 기본 지구본 감지 (Default Globe Detection)**: Google S2 API(`&sz=64`)는 파비콘이 없을 때 `16x16` 크기의 기본 회색 지구본 PNG를 내려주어 브라우저가 정상 로드로 착각하게 만듦. 이를 방지하기 위해 `onLoad` 시점에 Google S2 응답이 `16x16`이거나 너비/높이가 0인 경우 기본 플레이스홀더로 감지하고 즉시 다음 폴백 소스로 전환.
    - **스마트 이니셜 규칙**:
      - **한글 사이트**: 첫 1글자 추출 (예: `네이버` ➔ `네`, `카카오` ➔ `카`).
      - **영문 사이트**: 2글자 조합 (복합어/공백/대문자 분기는 단어별 앞 글자 조합 예: `GitHub` ➔ `GH`, `Stack Overflow` ➔ `SO` / 단일 단어는 앞 2글자 대문자 예: `Notion` ➔ `NO`).

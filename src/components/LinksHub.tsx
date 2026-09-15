@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
 import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
@@ -119,6 +119,29 @@ export const LinksHub: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<BookmarkLink | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // 전역 '/' 단축키로 검색창 포커스
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '/') {
+        const activeTag = document.activeElement?.tagName.toLowerCase();
+        const isEditable = document.activeElement?.getAttribute('contenteditable') === 'true';
+
+        // 이미 입력 요소에 포커스되어 있거나 모달이 열려 있는 경우 제외
+        if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || isEditable || isModalOpen) {
+          return;
+        }
+
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [isModalOpen]);
 
   // 드래그 앤 드롭 상태
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -221,25 +244,34 @@ export const LinksHub: React.FC<Props> = ({
           <div className="links-search-box">
             <Search size={13} className="links-search-icon" />
             <input
+              ref={searchInputRef}
               type="text"
               className="links-search-input"
               placeholder="바로가기 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Escape') setSearchQuery('');
+                if (e.key === 'Escape') {
+                  setSearchQuery('');
+                  searchInputRef.current?.blur();
+                }
               }}
             />
-            {searchQuery && (
+            {searchQuery ? (
               <button
                 type="button"
                 className="links-search-clear"
-                onClick={() => setSearchQuery('')}
+                onClick={() => {
+                  setSearchQuery('');
+                  searchInputRef.current?.focus();
+                }}
                 data-tooltip="지우기"
                 aria-label="검색어 지우기"
               >
                 <X size={12} />
               </button>
+            ) : (
+              <kbd className="links-search-kbd" title="단축키: /">/</kbd>
             )}
           </div>
 

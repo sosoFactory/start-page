@@ -21,12 +21,11 @@ describe('faviconHelper', () => {
   });
 
   describe('getFaviconSources', () => {
-    it('should return 3 fallback sources in order', () => {
+    it('should return 2 fallback sources in order', () => {
       const sources = getFaviconSources('https://github.com');
-      expect(sources).toHaveLength(3);
+      expect(sources).toHaveLength(2);
       expect(sources[0]).toContain('google.com/s2/favicons?domain=github.com');
-      expect(sources[1]).toContain('icons.duckduckgo.com/ip3/github.com.ico');
-      expect(sources[2]).toBe('https://github.com/favicon.ico');
+      expect(sources[1]).toBe('https://github.com/favicon.ico');
     });
   });
 

@@ -18,7 +18,7 @@ export const extractDomain = (url: string): string => {
 };
 
 /**
- * 3단계 파비콘 URL 후보 목록 생성
+ * 2단계 파비콘 URL 후보 목록 생성 (1차 Google S2, 2차 직접 루트 favicon.ico)
  */
 export const getFaviconSources = (url: string): string[] => {
   const domain = extractDomain(url);
@@ -26,7 +26,6 @@ export const getFaviconSources = (url: string): string[] => {
 
   return [
     `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
-    `https://icons.duckduckgo.com/ip3/${domain}.ico`,
     `https://${domain}/favicon.ico`
   ];
 };

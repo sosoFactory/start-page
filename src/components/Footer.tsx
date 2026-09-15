@@ -13,6 +13,10 @@ export const Footer: React.FC = () => {
         >
           © {COPYRIGHT_HOLDER}
         </a>
+        <span className="footer-divider">•</span>
+        <span className="footer-shortcut-hint">
+          단축키 <kbd className="footer-kbd">/</kbd> 검색
+        </span>
       </div>
 
       <div className="footer-right">

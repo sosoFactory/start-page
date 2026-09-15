@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Sliders, Database, HelpCircle, Download, Upload, RotateCcw, ShieldCheck, Star } from 'lucide-react';
+import { Sliders, Database, HelpCircle, Download, Upload, RotateCcw, ShieldCheck, Star, Keyboard } from 'lucide-react';
 import { BookmarkLink } from '../data/presetLinks';
 import { DashboardSettings } from '../types/settings';
 import { Modal } from './common/Modal';
@@ -256,6 +256,23 @@ export const SettingsModal: React.FC<Props> = ({
           <div className="settings-section-title">
             <HelpCircle size={14} className="settings-section-icon" />
             <span>도움말 및 가이드</span>
+          </div>
+
+          <div className="settings-guide-card">
+            <div className="guide-card-header">
+              <Keyboard size={13} color="var(--color-slate)" />
+              <strong>키보드 단축키 가이드</strong>
+            </div>
+            <div className="guide-card-shortcuts">
+              <div className="shortcut-row">
+                <kbd className="settings-kbd">/</kbd>
+                <span>자주 가는 링크 검색창으로 즉시 포커스 이동</span>
+              </div>
+              <div className="shortcut-row">
+                <kbd className="settings-kbd">ESC</kbd>
+                <span>검색창 초기화 및 열려 있는 모달 닫기</span>
+              </div>
+            </div>
           </div>
 
           <div className="settings-guide-card">

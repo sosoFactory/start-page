@@ -20,7 +20,7 @@ interface Props {
   openInNewTab?: boolean;
 }
 
-// 파비콘 3단계 폴백 및 스마트 이니셜 배지를 지원하는 컴포넌트
+// 파비콘 다단계 폴백 및 스마트 이니셜 배지를 지원하는 컴포넌트
 const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) => {
   const domain = extractDomain(url);
   const sources = getFaviconSources(url);
@@ -59,10 +59,11 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
     const img = e.currentTarget;
     const currentSrc = sources[sourceIndex] || '';
 
-    // Google S2 API(&sz=64)는 파비콘이 없을 때 16x16 크기의 기본 회색 지구본 PNG를 반환함
+    // Google S2 API(&sz=64)는 파비콘이 없을 때 16x16 크기(726B)의 기본 회색 지구본 PNG를 반환함
     const isGoogleS2 = currentSrc.includes('google.com/s2/favicons');
-    const isDefaultGlobe = isGoogleS2 && img.naturalWidth === 16 && img.naturalHeight === 16;
+    const isDefaultGlobe = isGoogleS2 && (img.naturalWidth <= 16 || img.naturalHeight <= 16);
 
+    // 유효하지 않은 크기이거나 기본 지구본 플레이스홀더인 경우 다음 소스(자체 루트 favicon) 또는 배지로 폴백
     if (img.naturalWidth === 0 || img.naturalHeight === 0 || isDefaultGlobe) {
       handleNextSource();
       return;
@@ -93,10 +94,11 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
     );
   }
 
-  const currentSrc = cached?.src || sources[sourceIndex];
+  const currentSrc = sources[sourceIndex];
 
   return (
     <img
+      key={`${url}-${sourceIndex}`}
       src={currentSrc}
       alt={title}
       className="link-favicon"
@@ -247,7 +249,7 @@ export const LinksHub: React.FC<Props> = ({
               ref={searchInputRef}
               type="text"
               className="links-search-input"
-              placeholder="바로가기 검색..."
+              placeholder="바로가기 검색... (단축키: /)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -271,7 +273,13 @@ export const LinksHub: React.FC<Props> = ({
                 <X size={12} />
               </button>
             ) : (
-              <kbd className="links-search-kbd" title="단축키: /">/</kbd>
+              <kbd
+                className="links-search-kbd"
+                data-tooltip="검색 단축키 (/)"
+                data-tooltip-pos="bottom"
+              >
+                /
+              </kbd>
             )}
           </div>
 

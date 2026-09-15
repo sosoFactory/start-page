@@ -3,6 +3,15 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.18.1] - 2026-09-15
+
+### 🐛 버그 수정 및 UI 가시성 개선 (Bug Fix & UX Improvement)
+- **검색창 너비 확장 및 플레이스홀더 글자 잘림/겹침 해결 (`styles/app.css`)**:
+  - `.links-search-box` 너비를 `215px` (포커스 시 `245px`)로 확장하여 `바로가기 검색... (단축키: /)` 문구가 `<kbd>/</kbd>` 배지와 겹치지 않고 온전히 표시되도록 개선
+- **가짜 플레이스홀더 차단 및 3단계 클린 파이프라인 개편 (`utils/faviconHelper.ts`, `components/LinksHub.tsx`)**:
+  - 404 상태에서 회색 원형 아이콘(`>`) PNG를 내려주던 DuckDuckGo를 완전 배제하고, 1차 Google S2(64px) ➔ 2차 직접 루트(`/favicon.ico`) ➔ 3차 스마트 이니셜 배지의 클린 파이프라인 구축
+  - Google S2 16x16 회색 지구본 플레이스홀더 감지 및 React Key 분리(`key={`${url}-${sourceIndex}`}`)로 파비콘 미등록 사이트에서 스마트 이니셜 배지가 항상 정확하게 표시되도록 보장
+
 ## [1.18.0] - 2026-09-15
 
 ### ✨ 신규 기능 (Feature)

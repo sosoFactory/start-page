@@ -21,11 +21,17 @@ describe('faviconHelper', () => {
   });
 
   describe('getFaviconSources', () => {
-    it('should return 2 fallback sources in order', () => {
+    it('should return Google FaviconV2, root domain fallback, direct root, and S2 sources', () => {
       const sources = getFaviconSources('https://github.com');
-      expect(sources).toHaveLength(2);
-      expect(sources[0]).toContain('google.com/s2/favicons?domain=github.com');
+      expect(sources).toHaveLength(3);
+      expect(sources[0]).toContain('gstatic.com/faviconV2');
       expect(sources[1]).toBe('https://github.com/favicon.ico');
+      expect(sources[2]).toContain('google.com/s2/favicons');
+
+      const subSources = getFaviconSources('https://app.tina.io');
+      expect(subSources).toHaveLength(4);
+      expect(subSources[0]).toContain('url=https://app.tina.io');
+      expect(subSources[1]).toContain('url=https://tina.io');
     });
   });
 

@@ -65,9 +65,9 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
       return;
     }
 
-    // Google S2 API(&sz=64)에서 16x16으로 반환된 경우, 726 바이트 기본 회색 지구본인지 정밀 판별 (Tina 같은 진짜 16x16 파비콘은 보존)
-    const isGoogleS2 = currentSrc.includes('google.com/s2/favicons');
-    if (isGoogleS2 && img.naturalWidth === 16 && img.naturalHeight === 16) {
+    // Google Favicon V2 / S2(&sz=64)에서 16x16으로 반환된 경우, 726 바이트 기본 회색 지구본인지 정밀 판별 (Tina 같은 진짜 16x16 파비콘은 보존)
+    const isGoogleFavicon = currentSrc.includes('google.com/s2/favicons') || currentSrc.includes('gstatic.com/faviconV2');
+    if (isGoogleFavicon && img.naturalWidth === 16 && img.naturalHeight === 16) {
       const isGlobe = await isDefaultGlobeImage(currentSrc);
       if (isGlobe) {
         handleNextSource();

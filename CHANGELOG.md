@@ -3,6 +3,13 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.18.3] - 2026-09-15
+
+### 🐛 버그 수정 및 파비콘 리졸버 개선 (Bug Fix & Favicon Improvement)
+- **Google Favicon V2 엔드포인트 및 서브도메인 상위 폴백 체계 구축 (`utils/faviconHelper.ts`, `components/LinksHub.tsx`)**:
+  - 레거시 S2 대신 최신 Chrome CDN인 Google Favicon V2(`t2.gstatic.com/faviconV2`)를 1차 소스로 채택하여 Tina(`tina.io`, `tinacms.org`) 등 최신 웹사이트의 고화질 파비콘 지원 확대
+  - `app.tina.io` 등 서브도메인 등록 시 상위 메인 루트 도메인의 FaviconV2를 2차로 자동 조회하여 브랜드 파비콘을 정상 렌더링하도록 개선
+
 ## [1.18.2] - 2026-09-15
 
 ### 🐛 버그 수정 (Bug Fix)

@@ -18,16 +18,39 @@ export const extractDomain = (url: string): string => {
 };
 
 /**
- * 2단계 파비콘 URL 후보 목록 생성 (1차 Google S2, 2차 직접 루트 favicon.ico)
+ * 루트 도메인 추출 헬퍼 (서브도메인 폴백용)
+ */
+export const getRootDomain = (domain: string): string => {
+  const parts = domain.split('.');
+  if (parts.length > 2) {
+    if (['co.kr', 'or.kr', 'ne.kr', 're.kr', 'pe.kr', 'go.kr'].some(cctld => domain.endsWith(cctld))) {
+      return parts.slice(-3).join('.');
+    }
+    return parts.slice(-2).join('.');
+  }
+  return domain;
+};
+
+/**
+ * 고화질 파비콘 URL 후보 목록 생성 (1차 Google FaviconV2, 2차 루트 도메인 FaviconV2, 3차 사이트 자체 /favicon.ico, 4차 Google S2)
  */
 export const getFaviconSources = (url: string): string[] => {
   const domain = extractDomain(url);
   if (!domain) return [];
 
-  return [
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
-    `https://${domain}/favicon.ico`
+  const rootDomain = getRootDomain(domain);
+  const sources = [
+    `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=64`
   ];
+
+  if (rootDomain !== domain) {
+    sources.push(`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${rootDomain}&size=64`);
+  }
+
+  sources.push(`https://${domain}/favicon.ico`);
+  sources.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=64`);
+
+  return sources;
 };
 
 /**

@@ -1287,3 +1287,51 @@ input:checked + .toggle-slider:before {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* ==================== 대시보드 하단 푸터 ==================== */
+.dashboard-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 14px 2px 14px;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--color-mute);
+  user-select: none;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-copyright-link {
+  color: var(--color-slate-soft);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.footer-copyright-link:hover {
+  color: var(--color-ink);
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-version-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-slate-soft);
+  background-color: var(--color-canvas-card);
+  padding: 2px 7px;
+  border-radius: var(--radius-app-xs);
+  border: 1px solid var(--color-hairline);
+  letter-spacing: 0.02em;
+}
+

@@ -3,6 +3,14 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.17.0] - 2026-09-15
+
+### ✨ 신규 기능 (Feature)
+- **대시보드 하단 푸터(Footer) 컴포넌트 구축 (`components/Footer.tsx`, `constants/appInfo.ts`, `app.css`)**:
+  - `© sosoFactory` 저작권 문구 및 GitHub 공식 저장소 새 탭 링크 제공
+  - 현재 애플리케이션 버전(`v1.17.0`) 배지 태그 표기
+  - 대시보드의 스크롤 없는 엄격한 100vh 고정 레이아웃을 온전히 유지하는 슬림 반응형 스타일 적용
+
 ## [1.16.1] - 2026-09-15
 
 ### 🐛 버그 수정 (Bug Fix)

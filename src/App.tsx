@@ -9,6 +9,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { DashboardSettings, DEFAULT_SETTINGS } from './types/settings';
 import { HeaderClock } from './components/HeaderClock';
 import { SettingsModal } from './components/SettingsModal';
+import { Footer } from './components/Footer';
 import { Settings } from 'lucide-react';
 import './styles/app.css';
 
@@ -123,6 +124,9 @@ export const App: React.FC = () => {
           <StockCard />
         </div>
       </main>
+
+      {/* 대시보드 하단 푸터 */}
+      <Footer />
 
       {/* 환경설정 및 데이터 관리 모달 */}
       <SettingsModal

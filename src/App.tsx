@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { LinksHub } from './components/LinksHub';
 import { RainForecastCard } from './components/RainForecastCard';
-import { StockCard } from './components/StockCard';
+import { TodoCard } from './components/TodoCard';
 import { PRESET_LINKS, BookmarkLink } from './data/presetLinks';
+import { PRESET_TODOS } from './data/presetTodos';
+import { TodoItem } from './types/todo';
 import { DEFAULT_REGION, Region } from './data/koreaRegions';
 import { WeatherData, fetchRainWeather } from './services/weatherService';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -21,7 +23,10 @@ export const App: React.FC = () => {
   const [settings, setSettings] = useLocalStorage<DashboardSettings>('saniti_settings_v1', DEFAULT_SETTINGS);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // 3. 날씨 및 지역 상태 관리
+  // 3. 오늘의 할 일 상태 관리
+  const [todos, setTodos] = useLocalStorage<TodoItem[]>('saniti_todos_v1', PRESET_TODOS);
+
+  // 4. 날씨 및 지역 상태 관리
   const [selectedRegion, setSelectedRegion] = useLocalStorage<Region>('saniti_region_v1', DEFAULT_REGION);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
@@ -70,6 +75,37 @@ export const App: React.FC = () => {
     setLinks(PRESET_LINKS);
   };
 
+  // 할 일 CRUD 처리 함수
+  const handleAddTodo = (text: string) => {
+    const newTodo: TodoItem = {
+      id: `todo-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      text,
+      completed: false,
+      createdAt: Date.now()
+    };
+    setTodos([newTodo, ...todos]);
+  };
+
+  const handleToggleTodo = (id: string) => {
+    setTodos(
+      todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
+  };
+
+  const handleDeleteTodo = (id: string) => {
+    setTodos(todos.filter((t) => t.id !== id));
+  };
+
+  const handleUpdateTodo = (id: string, newText: string) => {
+    setTodos(
+      todos.map((t) => (t.id === id ? { ...t, text: newText } : t))
+    );
+  };
+
+  const handleClearCompleted = () => {
+    setTodos(todos.filter((t) => !t.completed));
+  };
+
   return (
     <div className="dashboard-container">
       {/* 대시보드 상단 헤더 */}
@@ -109,7 +145,7 @@ export const App: React.FC = () => {
           openInNewTab={settings.openInNewTab}
         />
 
-        {/* 우측 영역: 38% 위젯 (강수확률 예보 및 주요 시세) */}
+        {/* 우측 영역: 38% 위젯 (강수확률 예보 및 오늘의 할 일) */}
         <div className="dashboard-sidebar">
           {/* 상단 위젯: 날씨 및 강수확률 예보 카드 */}
           <RainForecastCard
@@ -120,8 +156,15 @@ export const App: React.FC = () => {
             onRefresh={() => loadWeather(selectedRegion)}
           />
 
-          {/* 하단 위젯: 7대 주요 자산 시세 카드 */}
-          <StockCard />
+          {/* 하단 위젯: 오늘의 할 일 카드 */}
+          <TodoCard
+            todos={todos}
+            onAddTodo={handleAddTodo}
+            onToggleTodo={handleToggleTodo}
+            onDeleteTodo={handleDeleteTodo}
+            onClearCompleted={handleClearCompleted}
+            onUpdateTodo={handleUpdateTodo}
+          />
         </div>
       </main>
 

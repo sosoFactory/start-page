@@ -24,7 +24,28 @@ describe('TodoCard', () => {
     expect(screen.getByText('1/2 완료')).toBeTruthy();
     expect(screen.getByText('테스트 할 일 1')).toBeTruthy();
     expect(screen.getByText('테스트 할 일 2')).toBeTruthy();
-    expect(screen.getByText('완료 정리')).toBeTruthy();
+    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 정리' });
+    expect(clearBtn).toBeTruthy();
+    expect((clearBtn as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('disables clear completed button when no todos are completed', () => {
+    const activeTodos: TodoItem[] = [
+      { id: '1', text: '할 일 1', completed: false, createdAt: 1000 }
+    ];
+
+    render(
+      <TodoCard
+        todos={activeTodos}
+        onAddTodo={vi.fn()}
+        onToggleTodo={vi.fn()}
+        onDeleteTodo={vi.fn()}
+        onClearCompleted={vi.fn()}
+      />
+    );
+
+    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 정리' }) as HTMLButtonElement;
+    expect(clearBtn.disabled).toBe(true);
   });
 
   it('calls onAddTodo when submitting new todo text', () => {
@@ -46,7 +67,7 @@ describe('TodoCard', () => {
     expect(handleAdd).toHaveBeenCalledWith('새로운 작업');
   });
 
-  it('calls onToggleTodo when clicking the checkbox', () => {
+  it('calls onToggleTodo when clicking the label or checkbox', () => {
     const handleToggle = vi.fn();
     render(
       <TodoCard
@@ -58,10 +79,33 @@ describe('TodoCard', () => {
       />
     );
 
-    const toggleBtns = screen.getAllByRole('button', { name: /완료로 변경|미완료로 변경/ });
-    fireEvent.click(toggleBtns[0]);
+    const textLabel = screen.getByText('테스트 할 일 1');
+    fireEvent.click(textLabel);
 
     expect(handleToggle).toHaveBeenCalledWith('1');
+  });
+
+  it('supports inline editing of todo text', () => {
+    const handleUpdate = vi.fn();
+    render(
+      <TodoCard
+        todos={mockTodos}
+        onAddTodo={vi.fn()}
+        onToggleTodo={vi.fn()}
+        onDeleteTodo={vi.fn()}
+        onClearCompleted={vi.fn()}
+        onUpdateTodo={handleUpdate}
+      />
+    );
+
+    const editBtns = screen.getAllByRole('button', { name: '수정' });
+    fireEvent.click(editBtns[0]);
+
+    const editInput = screen.getByDisplayValue('테스트 할 일 1');
+    fireEvent.change(editInput, { target: { value: '수정된 할 일 내용' } });
+    fireEvent.keyDown(editInput, { key: 'Enter', code: 'Enter' });
+
+    expect(handleUpdate).toHaveBeenCalledWith('1', '수정된 할 일 내용');
   });
 
   it('calls onDeleteTodo when clicking delete button', () => {

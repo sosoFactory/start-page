@@ -864,10 +864,17 @@
   transition: all 0.15s ease;
 }
 
-.todo-clear-completed-btn:hover {
+.todo-clear-completed-btn:hover:not(:disabled) {
   color: var(--color-brand);
   border-color: var(--color-brand-light);
   background-color: #fff5f5;
+}
+
+.todo-clear-completed-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: var(--color-hairline);
+  color: var(--color-mute);
 }
 
 .todo-input-form {
@@ -959,11 +966,25 @@
   border-color: #f1f5f9;
 }
 
-.todo-check-btn {
-  background: transparent;
-  border: none;
-  padding: 0;
+.todo-content-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
   cursor: pointer;
+  user-select: none;
+}
+
+.todo-hidden-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.todo-check-custom {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -972,7 +993,7 @@
   flex-shrink: 0;
 }
 
-.todo-check-btn:hover {
+.todo-content-label:hover .todo-check-custom .todo-check-icon:not(.checked) {
   color: var(--color-brand);
 }
 
@@ -988,8 +1009,6 @@
   line-height: 1.35;
   word-break: break-all;
   transition: all 0.15s ease;
-  cursor: pointer;
-  user-select: none;
 }
 
 .todo-item.completed .todo-text {
@@ -1010,7 +1029,14 @@
   outline: none;
 }
 
-.todo-delete-btn {
+.todo-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.todo-action-btn {
   background: transparent;
   border: none;
   padding: 4px;
@@ -1022,14 +1048,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
-.todo-item:hover .todo-delete-btn {
+.todo-item:hover .todo-action-btn {
   opacity: 1;
 }
 
-.todo-delete-btn:hover {
+.todo-action-btn:hover {
+  color: var(--color-ink);
+  background-color: var(--color-canvas-soft);
+}
+
+.todo-action-btn.delete:hover {
   color: #ef4444;
   background-color: #fef2f2;
 }

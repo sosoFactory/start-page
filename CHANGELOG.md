@@ -3,6 +3,14 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.19.1] - 2026-09-30
+
+### 💄 사용성 및 UI 개선 (UX Improvement)
+- **할 일 목록(To-Do List) 인터랙션 및 상태 제어 강화 (`components/TodoCard.tsx`, `styles/app.css`)**:
+  - 할 일 텍스트를 `<label>`로 체크박스와 연결하여 텍스트 영역 클릭 시에도 원클릭 완료/미완료 토글 지원
+  - 항목 호버 시 명시적 수정(`Pencil`) 아이콘 버튼 제공 및 인라인 편집 UX 지원 (`Enter`/`blur` 시 저장, `ESC` 취소)
+  - 카드 헤더의 `완료 정리` 버튼을 상시 노출하되 완료 항목이 없을 경우 `disabled` 상태로 비활성화하여 UI 깜빡임 및 레이아웃 흔들림 방지
+
 ## [1.19.0] - 2026-09-30
 
 ### ✨ 신규 기능 (Feature)

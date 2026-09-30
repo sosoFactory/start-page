@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TodoItem } from '../types/todo';
-import { Square, Plus, Trash2, CheckCircle2, ListTodo, Sparkles } from 'lucide-react';
+import { Square, Plus, Trash2, CheckCircle2, ListTodo, Sparkles, Pencil } from 'lucide-react';
 
 interface Props {
   todos: TodoItem[];
@@ -81,18 +81,18 @@ export const TodoCard: React.FC<Props> = ({
           )}
         </div>
 
-        {completedCount > 0 && (
-          <button
-            type="button"
-            className="todo-clear-completed-btn"
-            onClick={onClearCompleted}
-            data-tooltip="완료된 항목 모두 정리"
-            data-tooltip-pos="bottom-left"
-            aria-label="완료된 항목 모두 정리"
-          >
-            완료 정리
-          </button>
-        )}
+        {/* 완료 정리 버튼 상시 노출 (완료 항목 없을 시 disabled) */}
+        <button
+          type="button"
+          className="todo-clear-completed-btn"
+          onClick={onClearCompleted}
+          disabled={completedCount === 0}
+          data-tooltip={completedCount > 0 ? '완료된 항목 모두 정리' : undefined}
+          data-tooltip-pos="bottom-left"
+          aria-label="완료된 항목 모두 정리"
+        >
+          완료 정리
+        </button>
       </div>
 
       {/* 카드 본문 */}
@@ -138,21 +138,7 @@ export const TodoCard: React.FC<Props> = ({
                     key={todo.id}
                     className={`todo-item ${todo.completed ? 'completed' : ''}`}
                   >
-                    {/* 체크박스 토글 버튼 */}
-                    <button
-                      type="button"
-                      className="todo-check-btn"
-                      onClick={() => onToggleTodo(todo.id)}
-                      aria-label={todo.completed ? '미완료로 변경' : '완료로 변경'}
-                    >
-                      {todo.completed ? (
-                        <CheckCircle2 size={16} className="todo-check-icon checked" />
-                      ) : (
-                        <Square size={16} className="todo-check-icon" />
-                      )}
-                    </button>
-
-                    {/* 할 일 텍스트 또는 인라인 편집 인풋 */}
+                    {/* 인라인 수정 중일 때 */}
                     {isEditing ? (
                       <input
                         ref={editInputRef}
@@ -165,26 +151,54 @@ export const TodoCard: React.FC<Props> = ({
                         maxLength={120}
                       />
                     ) : (
-                      <span
-                        className="todo-text"
-                        onDoubleClick={() => handleStartEdit(todo)}
-                        title="더블클릭하여 수정"
+                      /* 라벨 연동: 텍스트 클릭 시에도 체크박스 토글 */
+                      <label
+                        htmlFor={`todo-check-${todo.id}`}
+                        className="todo-content-label"
                       >
-                        {todo.text}
-                      </span>
+                        <input
+                          id={`todo-check-${todo.id}`}
+                          type="checkbox"
+                          className="todo-hidden-checkbox"
+                          checked={todo.completed}
+                          onChange={() => onToggleTodo(todo.id)}
+                        />
+                        <span className="todo-check-custom">
+                          {todo.completed ? (
+                            <CheckCircle2 size={16} className="todo-check-icon checked" />
+                          ) : (
+                            <Square size={16} className="todo-check-icon" />
+                          )}
+                        </span>
+                        <span className="todo-text">{todo.text}</span>
+                      </label>
                     )}
 
-                    {/* 개별 항목 삭제 버튼 */}
-                    <button
-                      type="button"
-                      className="todo-delete-btn"
-                      onClick={() => onDeleteTodo(todo.id)}
-                      data-tooltip="삭제"
-                      data-tooltip-pos="bottom-left"
-                      aria-label="삭제"
-                    >
-                      <Trash2 size={13} />
-                    </button>
+                    {/* 개별 항목 액션 버튼 (수정 & 삭제) */}
+                    <div className="todo-actions">
+                      {!isEditing && (
+                        <button
+                          type="button"
+                          className="todo-action-btn"
+                          onClick={() => handleStartEdit(todo)}
+                          data-tooltip="수정"
+                          data-tooltip-pos="bottom-left"
+                          aria-label="수정"
+                        >
+                          <Pencil size={12} />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="todo-action-btn delete"
+                        onClick={() => onDeleteTodo(todo.id)}
+                        data-tooltip="삭제"
+                        data-tooltip-pos="bottom-left"
+                        aria-label="삭제"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
                   </li>
                 );
               })}

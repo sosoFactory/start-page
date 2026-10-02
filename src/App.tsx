@@ -4,7 +4,7 @@ import { RainForecastCard } from './components/RainForecastCard';
 import { TodoCard } from './components/TodoCard';
 import { PRESET_LINKS, BookmarkLink } from './data/presetLinks';
 import { PRESET_TODOS } from './data/presetTodos';
-import { TodoItem } from './types/todo';
+import { TodoItem, TodoTab, DEFAULT_TODO_TABS, DEFAULT_TODO_TAB_ID } from './types/todo';
 import { DEFAULT_REGION, Region } from './data/koreaRegions';
 import { WeatherData, fetchRainWeather } from './services/weatherService';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -49,8 +49,17 @@ export const App: React.FC = () => {
   const [settings, setSettings] = useLocalStorage<DashboardSettings>('saniti_settings_v1', DEFAULT_SETTINGS);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // 3. 오늘의 할 일 상태 관리
+  // 3. 오늘의 할 일 및 탭 상태 관리
+  const [tabs, setTabs] = useLocalStorage<TodoTab[]>('saniti_todo_tabs_v1', DEFAULT_TODO_TABS);
+  const [activeTabId, setActiveTabId] = useLocalStorage<string>('saniti_active_todo_tab_v1', DEFAULT_TODO_TAB_ID);
   const [todos, setTodos] = useLocalStorage<TodoItem[]>('saniti_todos_v1', PRESET_TODOS);
+
+  // 활성 탭 유효성 보정 (탭이 삭제되었거나 목록에 없을 경우 기본 탭으로 복구)
+  useEffect(() => {
+    if (tabs && tabs.length > 0 && !tabs.some((t) => t.id === activeTabId)) {
+      setActiveTabId(tabs[0].id);
+    }
+  }, [tabs, activeTabId, setActiveTabId]);
 
   // 4. 날씨 및 지역 상태 관리
   const [selectedRegion, setSelectedRegion] = useLocalStorage<Region>('saniti_region_v1', DEFAULT_REGION);
@@ -101,13 +110,58 @@ export const App: React.FC = () => {
     setLinks(PRESET_LINKS);
   };
 
+  // 탭 조작 핸들러
+  const handleAddTab = (name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const newTab: TodoTab = {
+      id: `tab-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: trimmed,
+      createdAt: Date.now()
+    };
+    setTabs([...tabs, newTab]);
+    setActiveTabId(newTab.id);
+  };
+
+  const handleUpdateTab = (id: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed) return;
+    setTabs(tabs.map((t) => (t.id === id ? { ...t, name: trimmed } : t)));
+  };
+
+  const handleDeleteTab = (id: string) => {
+    if (tabs.length <= 1) return; // 마지막 탭은 삭제 불가
+    const remaining = tabs.filter((t) => t.id !== id);
+    setTabs(remaining);
+
+    // 삭제된 탭에 속한 할 일들은 첫 번째 남은 탭으로 안전 이전
+    const fallbackTabId = remaining[0].id;
+    setTodos(
+      todos.map((todo) => {
+        const currentTabId = todo.tabId || DEFAULT_TODO_TAB_ID;
+        return currentTabId === id ? { ...todo, tabId: fallbackTabId } : todo;
+      })
+    );
+
+    if (activeTabId === id) {
+      setActiveTabId(fallbackTabId);
+    }
+  };
+
+  const handleMoveTodoTab = (todoId: string, targetTabId: string) => {
+    setTodos(
+      todos.map((todo) => (todo.id === todoId ? { ...todo, tabId: targetTabId } : todo))
+    );
+  };
+
   // 할 일 CRUD 처리 함수
-  const handleAddTodo = (text: string) => {
+  const handleAddTodo = (text: string, tabId?: string) => {
     const newTodo: TodoItem = {
       id: `todo-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       text,
       completed: false,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      tabId: tabId || activeTabId || DEFAULT_TODO_TAB_ID
     };
     setTodos([newTodo, ...todos]);
   };
@@ -128,8 +182,14 @@ export const App: React.FC = () => {
     );
   };
 
-  const handleClearCompleted = () => {
-    setTodos(todos.filter((t) => !t.completed));
+  const handleClearCompleted = (tabId?: string) => {
+    const targetTabId = tabId || activeTabId || DEFAULT_TODO_TAB_ID;
+    setTodos(
+      todos.filter((t) => {
+        const currentTabId = t.tabId || DEFAULT_TODO_TAB_ID;
+        return currentTabId !== targetTabId || !t.completed;
+      })
+    );
   };
 
   return (
@@ -182,9 +242,16 @@ export const App: React.FC = () => {
             onRefresh={() => loadWeather(selectedRegion)}
           />
 
-          {/* 하단 위젯: 오늘의 할 일 카드 */}
+          {/* 하단 위젯: 오늘의 할 일 카드 (다중 탭 지원) */}
           <TodoCard
             todos={todos}
+            tabs={tabs}
+            activeTabId={activeTabId}
+            onSelectTab={setActiveTabId}
+            onAddTab={handleAddTab}
+            onUpdateTab={handleUpdateTab}
+            onDeleteTab={handleDeleteTab}
+            onMoveTodoTab={handleMoveTodoTab}
             onAddTodo={handleAddTodo}
             onToggleTodo={handleToggleTodo}
             onDeleteTodo={handleDeleteTodo}

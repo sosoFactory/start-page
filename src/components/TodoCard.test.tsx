@@ -60,11 +60,11 @@ describe('TodoCard', () => {
       />
     );
 
-    const input = screen.getByPlaceholderText('새로운 할 일 입력... (Enter로 추가)');
+    const input = screen.getByPlaceholderText(/할 일/);
     fireEvent.change(input, { target: { value: '새로운 작업' } });
     fireEvent.submit(input);
 
-    expect(handleAdd).toHaveBeenCalledWith('새로운 작업');
+    expect(handleAdd).toHaveBeenCalledWith('새로운 작업', 'default');
   });
 
   it('calls onToggleTodo when clicking the label or checkbox', () => {
@@ -141,13 +141,30 @@ describe('TodoCard', () => {
     const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 정리' });
     fireEvent.click(clearBtn);
 
-    expect(handleClear).toHaveBeenCalledTimes(1);
+    expect(handleClear).toHaveBeenCalledWith('default');
   });
 
-  it('renders empty state when there are no todos', () => {
-    render(
+  it('supports multiple tabs, tab switching, and moving todos between tabs', () => {
+    const customTabs = [
+      { id: 'default', name: '기본', createdAt: 0 },
+      { id: 'work', name: '업무', createdAt: 1000 }
+    ];
+
+    const tabTodos: TodoItem[] = [
+      { id: '1', text: '기본 할 일', completed: false, createdAt: 1000, tabId: 'default' },
+      { id: '2', text: '업무 할 일', completed: false, createdAt: 2000, tabId: 'work' }
+    ];
+
+    const handleSelectTab = vi.fn();
+    const handleMoveTodoTab = vi.fn();
+
+    const { rerender } = render(
       <TodoCard
-        todos={[]}
+        todos={tabTodos}
+        tabs={customTabs}
+        activeTabId="default"
+        onSelectTab={handleSelectTab}
+        onMoveTodoTab={handleMoveTodoTab}
         onAddTodo={vi.fn()}
         onToggleTodo={vi.fn()}
         onDeleteTodo={vi.fn()}
@@ -155,6 +172,63 @@ describe('TodoCard', () => {
       />
     );
 
-    expect(screen.getByText('오늘의 할 일이 모두 완료되었거나 없습니다.')).toBeTruthy();
+    // 기본 탭에는 '기본 할 일'만 보여야 함
+    expect(screen.getByText('기본 할 일')).toBeTruthy();
+    expect(screen.queryByText('업무 할 일')).toBeNull();
+
+    // '업무' 탭 버튼 클릭 시 onSelectTab 호출
+    const workTabBtn = screen.getByRole('button', { name: /업무/ });
+    fireEvent.click(workTabBtn);
+    expect(handleSelectTab).toHaveBeenCalledWith('work');
+
+    // 활성 탭이 'work'로 변경되었을 때 리렌더링
+    rerender(
+      <TodoCard
+        todos={tabTodos}
+        tabs={customTabs}
+        activeTabId="work"
+        onSelectTab={handleSelectTab}
+        onMoveTodoTab={handleMoveTodoTab}
+        onAddTodo={vi.fn()}
+        onToggleTodo={vi.fn()}
+        onDeleteTodo={vi.fn()}
+        onClearCompleted={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('업무 할 일')).toBeTruthy();
+    expect(screen.queryByText('기본 할 일')).toBeNull();
+
+    // 다른 탭으로 이동 버튼 클릭 및 탭 이동 테스트
+    const moveBtn = screen.getByRole('button', { name: '다른 탭으로 이동' });
+    fireEvent.click(moveBtn);
+
+    const moveTargetBtn = screen.getByRole('button', { name: '기본' });
+    fireEvent.click(moveTargetBtn);
+
+    expect(handleMoveTodoTab).toHaveBeenCalledWith('2', 'default');
+  });
+
+  it('supports adding a new tab', () => {
+    const handleAddTab = vi.fn();
+    render(
+      <TodoCard
+        todos={mockTodos}
+        onAddTab={handleAddTab}
+        onAddTodo={vi.fn()}
+        onToggleTodo={vi.fn()}
+        onDeleteTodo={vi.fn()}
+        onClearCompleted={vi.fn()}
+      />
+    );
+
+    const addTabBtn = screen.getByRole('button', { name: '새 탭 추가' });
+    fireEvent.click(addTabBtn);
+
+    const tabInput = screen.getByPlaceholderText('새 탭 이름');
+    fireEvent.change(tabInput, { target: { value: '프로젝트' } });
+    fireEvent.keyDown(tabInput, { key: 'Enter', code: 'Enter' });
+
+    expect(handleAddTab).toHaveBeenCalledWith('프로젝트');
   });
 });

@@ -28,7 +28,12 @@ export const SettingsModal: React.FC<Props> = ({
   // JSON 내보내기 핸들러
   const handleExportJson = () => {
     try {
-      const exportLinks = links.map(({ id, title, url }) => ({ id, title, url }));
+      const exportLinks = links.map(({ id, title, url, tags }) => ({
+        id,
+        title,
+        url,
+        tags: tags || []
+      }));
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportLinks, null, 2));
       const downloadAnchor = document.createElement('a');
       const now = new Date();
@@ -73,7 +78,8 @@ export const SettingsModal: React.FC<Props> = ({
             validatedLinks.push({
               id: typeof item.id === 'string' && item.id.trim() !== '' ? item.id : `link-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
               title: typeof item.title === 'string' && item.title.trim() !== '' ? item.title.trim() : '이름 없음',
-              url: item.url.trim()
+              url: item.url.trim(),
+              tags: Array.isArray(item.tags) ? item.tags.filter((t: any) => typeof t === 'string' && t.trim() !== '') : []
             });
           }
         }

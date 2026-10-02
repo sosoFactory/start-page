@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
 import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
+import { extractAllTags } from '../utils/tagHelper';
 import {
   extractDomain,
   getFaviconSources,
@@ -43,7 +44,7 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
 
   const handleNextSource = () => {
     if (sourceIndex + 1 < sources.length) {
-      setSourceIndex(prev => prev + 1);
+      setSourceIndex((prev) => prev + 1);
     } else {
       setUseInitial(true);
       if (domain) {
@@ -115,7 +116,6 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
   );
 };
 
-
 export const LinksHub: React.FC<Props> = ({
   links,
   onAddLink,
@@ -127,7 +127,12 @@ export const LinksHub: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<BookmarkLink | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // 전체 등록된 태그 및 빈도수 추출
+  const allTagStats = useMemo(() => extractAllTags(links), [links]);
+  const existingTagsList = useMemo(() => allTagStats.map((t) => t.tag), [allTagStats]);
 
   // 전역 '/' 단축키로 검색창 포커스
   useEffect(() => {
@@ -155,14 +160,30 @@ export const LinksHub: React.FC<Props> = ({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // 실시간 검색 필터링
+  // 실시간 검색 & 태그 필터링
   const isSearching = searchQuery.trim().length > 0;
-  const filteredLinks = isSearching
-    ? links.filter((link) => {
-        const query = searchQuery.toLowerCase().trim();
-        return link.title.toLowerCase().includes(query) || link.url.toLowerCase().includes(query);
-      })
-    : links;
+  const isTagFiltered = selectedTag !== null;
+  const isFiltering = isSearching || isTagFiltered;
+
+  const filteredLinks = useMemo(() => {
+    let result = links;
+
+    if (selectedTag) {
+      result = result.filter((link) => link.tags?.includes(selectedTag));
+    }
+
+    if (isSearching) {
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter((link) => {
+        const matchTitle = link.title.toLowerCase().includes(query);
+        const matchUrl = link.url.toLowerCase().includes(query);
+        const matchTag = link.tags?.some((t) => t.toLowerCase().includes(query));
+        return matchTitle || matchUrl || matchTag;
+      });
+    }
+
+    return result;
+  }, [links, selectedTag, isSearching, searchQuery]);
 
   const formatDisplayUrl = (rawUrl: string) => {
     try {
@@ -243,7 +264,9 @@ export const LinksHub: React.FC<Props> = ({
           <span className="brand-dot" />
           <h2 className="card-title">자주 가는 링크</h2>
           <span className="mono-eyebrow" style={{ marginLeft: '6px' }}>
-            {isSearching ? `${filteredLinks.length}/${links.length} SITES` : `${links.length} SITES (DRAG TO REORDER)`}
+            {isFiltering
+              ? `${filteredLinks.length}/${links.length} SITES`
+              : `${links.length} SITES (DRAG TO REORDER)`}
           </span>
         </div>
 
@@ -304,17 +327,47 @@ export const LinksHub: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* 태그 클라우드 바 (등록된 태그가 있을 때 노출) */}
+      {allTagStats.length > 0 && (
+        <div className="tag-cloud-bar">
+          <button
+            type="button"
+            className={`tag-pill ${selectedTag === null ? 'active' : ''}`}
+            onClick={() => setSelectedTag(null)}
+          >
+            전체 <span className="tag-pill-count">{links.length}</span>
+          </button>
+          {allTagStats.map(({ tag, count }) => (
+            <button
+              key={tag}
+              type="button"
+              className={`tag-pill ${selectedTag === tag ? 'active' : ''}`}
+              onClick={() => setSelectedTag((prev) => (prev === tag ? null : tag))}
+            >
+              #{tag} <span className="tag-pill-count">{count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="links-card-body">
         {filteredLinks.length === 0 ? (
           <div className="links-empty-search">
             <Search size={24} style={{ color: 'var(--color-slate-soft)', marginBottom: '8px' }} />
             <div style={{ fontWeight: 600, color: 'var(--color-ink)', marginBottom: '4px' }}>
-              '{searchQuery}'에 일치하는 바로가기가 없습니다
+              {isSearching
+                ? `'${searchQuery}'에 일치하는 바로가기가 없습니다`
+                : selectedTag
+                ? `'#${selectedTag}' 태그를 가진 바로가기가 없습니다`
+                : '등록된 바로가기가 없습니다'}
             </div>
             <button
               type="button"
               className="btn-secondary"
-              onClick={() => setSearchQuery('')}
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedTag(null);
+              }}
               style={{ marginTop: '8px', fontSize: '11.5px', padding: '4px 10px' }}
             >
               전체 바로가기 보기
@@ -333,13 +386,13 @@ export const LinksHub: React.FC<Props> = ({
                   href={link.url}
                   target={openInNewTab ? '_blank' : '_self'}
                   rel={openInNewTab ? 'noopener noreferrer' : undefined}
-                  draggable={!isSearching}
-                  onDragStart={(e) => !isSearching && handleDragStart(e, index)}
-                  onDragOver={(e) => !isSearching && handleDragOver(e, index)}
+                  draggable={!isFiltering}
+                  onDragStart={(e) => !isFiltering && handleDragStart(e, index)}
+                  onDragOver={(e) => !isFiltering && handleDragOver(e, index)}
                   onDragLeave={handleDragLeave}
-                  onDrop={(e) => !isSearching && handleDrop(e, index)}
+                  onDrop={(e) => !isFiltering && handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
-                  className={`link-tile ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${isSearching ? 'no-drag' : ''}`}
+                  className={`link-tile ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''} ${isFiltering ? 'no-drag' : ''}`}
                 >
                   <div className="link-tile-header">
                     <div className="link-favicon-wrapper">
@@ -373,12 +426,26 @@ export const LinksHub: React.FC<Props> = ({
                     <span className="link-url-host">{host}</span>
                     {path && <span className="link-url-path">{path}</span>}
                   </div>
+
+                  {/* 타일 내 태그 뱃지 목록 */}
+                  {link.tags && link.tags.length > 0 && (
+                    <div className="link-tile-tags">
+                      {link.tags.slice(0, 3).map((tag) => (
+                        <span key={tag} className="link-tag-badge">
+                          #{tag}
+                        </span>
+                      ))}
+                      {link.tags.length > 3 && (
+                        <span className="link-tag-more">+{link.tags.length - 3}</span>
+                      )}
+                    </div>
+                  )}
                 </a>
               );
             })}
 
-            {/* 새 바로가기 추가 카드 (검색 중이 아닐 때만 노출) */}
-            {!isSearching && (
+            {/* 새 바로가기 추가 카드 (필터/검색 중이 아닐 때만 노출) */}
+            {!isFiltering && (
               <button
                 className="add-link-tile"
                 onClick={() => {
@@ -407,6 +474,7 @@ export const LinksHub: React.FC<Props> = ({
           }
         }}
         editingLink={editingLink}
+        existingTags={existingTagsList}
       />
     </section>
   );

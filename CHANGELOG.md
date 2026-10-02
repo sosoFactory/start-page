@@ -3,6 +3,19 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.20.0] - 2026-10-02
+
+### ✨ 신규 기능 (Feature)
+- **즐겨찾기 태그 시스템 및 태그 클라우드 필터 바 도입 (`components/LinksHub.tsx`, `components/BookmarkModal.tsx`, `utils/tagHelper.ts`, `data/presetLinks.ts`, `styles/app.css`)**:
+  - `BookmarkLink` 데이터 모델에 `tags?: string[]` 속성 추가 및 기본 프리셋 링크에 대표 태그 부여
+  - 링크 허브 상단에 수평 스크롤 형태의 '태그 클라우드 바'(`전체` + 각 태그별 빈도수 칩) 탑재 및 원클릭 실시간 필터링 지원 (검색창과 완벽 연동)
+  - 바로가기 타일 하단에 정갈한 컴팩트 태그 뱃지(`#태그`) 시각화
+- **스마트 자동 태그 추천 엔진 (`utils/tagHelper.ts`)**:
+  - 바로가기 등록 시 URL 및 사이트명 입력에 따라 도메인/키워드 규칙 및 기존 태그 목록 기반으로 최적의 태그 자동 추론 및 추천 칩 제공
+  - `Enter`/쉼표(`,`)를 통한 손쉬운 태그 추가 및 `X` 삭제 지원
+- **데이터 백업 및 복원 호환성 확보 (`components/SettingsModal.tsx`)**:
+  - JSON 내보내기/가져오기 시 `tags` 필드 온전히 포함 및 스키마 검증
+
 ## [1.19.1] - 2026-09-30
 
 ### 💄 사용성 및 UI 개선 (UX Improvement)

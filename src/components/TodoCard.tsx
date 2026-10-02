@@ -10,7 +10,8 @@ import {
   Pencil,
   ArrowRightLeft,
   X,
-  Check
+  Check,
+  GripVertical
 } from 'lucide-react';
 
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
   onUpdateTab?: (id: string, newName: string) => void;
   onDeleteTab?: (id: string) => void;
   onMoveTodoTab?: (todoId: string, targetTabId: string) => void;
+  onReorderTodos?: (newTodos: TodoItem[]) => void;
   onAddTodo: (text: string, tabId?: string) => void;
   onToggleTodo: (id: string) => void;
   onDeleteTodo: (id: string) => void;
@@ -38,6 +40,7 @@ export const TodoCard: React.FC<Props> = ({
   onUpdateTab,
   onDeleteTab,
   onMoveTodoTab,
+  onReorderTodos,
   onAddTodo,
   onToggleTodo,
   onDeleteTodo,
@@ -56,6 +59,10 @@ export const TodoCard: React.FC<Props> = ({
   
   // 이동 드롭다운 상태
   const [moveMenuTodoId, setMoveMenuTodoId] = useState<string | null>(null);
+
+  // 드래그 앤 드롭 상태
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const editInputRef = useRef<HTMLInputElement>(null);
@@ -175,6 +182,59 @@ export const TodoCard: React.FC<Props> = ({
   const handleMoveToTab = (todoId: string, targetTabId: string) => {
     onMoveTodoTab?.(todoId, targetTabId);
     setMoveMenuTodoId(null);
+  };
+
+  // 드래그 앤 드롭 이벤트 핸들러
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const reorderedTabTodos = [...currentTabTodos];
+    const [draggedItem] = reorderedTabTodos.splice(draggedIndex, 1);
+    reorderedTabTodos.splice(targetIndex, 0, draggedItem);
+
+    // 전체 todos 배열에서 현재 탭의 할 일 순서를 reorderedTabTodos로 교체
+    let tabIndex = 0;
+    const nextTodos = todos.map((todo) => {
+      const itemTabId = todo.tabId || DEFAULT_TODO_TAB_ID;
+      if (itemTabId === currentTabId) {
+        const replacement = reorderedTabTodos[tabIndex];
+        tabIndex++;
+        return replacement;
+      }
+      return todo;
+    });
+
+    onReorderTodos?.(nextTodos);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
   };
 
   const currentTab = tabs.find((t) => t.id === currentTabId);
@@ -361,16 +421,31 @@ export const TodoCard: React.FC<Props> = ({
             </div>
           ) : (
             <ul className="todo-list">
-              {currentTabTodos.map((todo) => {
+              {currentTabTodos.map((todo, index) => {
                 const isEditing = editingTodoId === todo.id;
                 const isMoveOpen = moveMenuTodoId === todo.id;
                 const otherTabs = tabs.filter((t) => t.id !== currentTabId);
+                const isDragging = draggedIndex === index;
+                const isDragOver = dragOverIndex === index;
 
                 return (
                   <li
                     key={todo.id}
-                    className={`todo-item ${todo.completed ? 'completed' : ''}`}
+                    draggable={!isEditing}
+                    onDragStart={(e) => !isEditing && handleDragStart(e, index)}
+                    onDragOver={(e) => !isEditing && handleDragOver(e, index)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => !isEditing && handleDrop(e, index)}
+                    onDragEnd={handleDragEnd}
+                    className={`todo-item ${todo.completed ? 'completed' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
                   >
+                    {/* 드래그 핸들 아이콘 */}
+                    {!isEditing && (
+                      <span className="todo-drag-handle" aria-hidden="true">
+                        <GripVertical size={13} />
+                      </span>
+                    )}
+
                     {/* 인라인 수정 중일 때 */}
                     {isEditing ? (
                       <input

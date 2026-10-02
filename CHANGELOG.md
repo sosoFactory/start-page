@@ -3,6 +3,15 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.21.1] - 2026-10-02
+
+### ✨ 신규 기능 및 인터랙션 개선 (Feature & Interaction)
+- **오늘의 할 일 드래그 핸들 및 순서 재배치(Drag & Drop Reorder) 구현 (`components/TodoCard.tsx`, `App.tsx`, `styles/app.css`)**:
+  - 각 할 일 항목 앞단에 은은한 드래그 핸들(`GripVertical`) 아이콘 탑재 (`cursor: grab / grabbing`)
+  - 마우스로 끌어서 현재 탭 내에서 할 일 순서를 자유롭게 재배치하고 로컬 스토리지에 즉시 영속 저장
+  - 드래그 영역의 불필요한 툴팁을 제거하여 화면 클리핑 및 간섭 방지
+  - `overflow-x: hidden`, `touch-action: pan-y`, 요소 크기 불변 하이라이트 적용으로 드래그 중 좌우 흔들림 및 가로 스크롤 발생 완전 차단
+
 ## [1.21.0] - 2026-10-02
 
 ### ✨ 신규 기능 (Feature)

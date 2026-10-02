@@ -182,6 +182,10 @@ export const App: React.FC = () => {
     );
   };
 
+  const handleReorderTodos = (reorderedTodos: TodoItem[]) => {
+    setTodos(reorderedTodos);
+  };
+
   const handleClearCompleted = (tabId?: string) => {
     const targetTabId = tabId || activeTabId || DEFAULT_TODO_TAB_ID;
     setTodos(
@@ -242,7 +246,7 @@ export const App: React.FC = () => {
             onRefresh={() => loadWeather(selectedRegion)}
           />
 
-          {/* 하단 위젯: 오늘의 할 일 카드 (다중 탭 지원) */}
+          {/* 하단 위젯: 오늘의 할 일 카드 (다중 탭 및 드래그 앤 드롭 지원) */}
           <TodoCard
             todos={todos}
             tabs={tabs}
@@ -252,6 +256,7 @@ export const App: React.FC = () => {
             onUpdateTab={handleUpdateTab}
             onDeleteTab={handleDeleteTab}
             onMoveTodoTab={handleMoveTodoTab}
+            onReorderTodos={handleReorderTodos}
             onAddTodo={handleAddTodo}
             onToggleTodo={handleToggleTodo}
             onDeleteTodo={handleDeleteTodo}

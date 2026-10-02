@@ -221,7 +221,6 @@ describe('TodoCard', () => {
         onClearCompleted={vi.fn()}
       />
     );
-
     const addTabBtn = screen.getByRole('button', { name: '새 탭 추가' });
     fireEvent.click(addTabBtn);
 
@@ -230,5 +229,46 @@ describe('TodoCard', () => {
     fireEvent.keyDown(tabInput, { key: 'Enter', code: 'Enter' });
 
     expect(handleAddTab).toHaveBeenCalledWith('프로젝트');
+  });
+
+  it('supports drag and drop reordering of todos', () => {
+    const handleReorder = vi.fn();
+    const threeTodos: TodoItem[] = [
+      { id: '1', text: '할 일 1', completed: false, createdAt: 1000 },
+      { id: '2', text: '할 일 2', completed: false, createdAt: 2000 },
+      { id: '3', text: '할 일 3', completed: false, createdAt: 3000 }
+    ];
+
+    const { container } = render(
+      <TodoCard
+        todos={threeTodos}
+        onReorderTodos={handleReorder}
+        onAddTodo={vi.fn()}
+        onToggleTodo={vi.fn()}
+        onDeleteTodo={vi.fn()}
+        onClearCompleted={vi.fn()}
+      />
+    );
+
+    const items = container.querySelectorAll('.todo-item');
+    expect(items.length).toBe(3);
+
+    // 0번째 항목을 2번째 위치로 드래그 앤 드롭
+    const dataTransfer = {
+      setData: vi.fn(),
+      getData: vi.fn(),
+      effectAllowed: 'move',
+      dropEffect: 'move'
+    };
+
+    fireEvent.dragStart(items[0], { dataTransfer });
+    fireEvent.dragOver(items[2], { dataTransfer });
+    fireEvent.drop(items[2], { dataTransfer });
+
+    expect(handleReorder).toHaveBeenCalledWith([
+      threeTodos[1],
+      threeTodos[2],
+      threeTodos[0]
+    ]);
   });
 });

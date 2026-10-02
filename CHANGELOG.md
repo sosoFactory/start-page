@@ -3,6 +3,15 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.20.2] - 2026-10-02
+
+### 💄 UI/UX 및 반응형 개선 (UI/UX & Responsive Layout)
+- **태그 클라우드 가로 스크롤 제거 및 2줄 동적 감지 더보기 토글 탑재 (`components/LinksHub.tsx`, `styles/app.css`)**:
+  - 가로 스크롤(`overflow-x: auto`)을 완전히 제거하고 단정한 줄바꿈(`flex-wrap: wrap`) 랩 레이아웃 적용
+  - `ResizeObserver` 및 자식 요소 `offsetTop` 계산을 통해 실제 렌더링된 줄 수가 2줄을 초과하는지 실시간 감지하여 `더보기 ▾` / `접기 ▴` 토글 버튼 자동 노출
+  - 태그 알약 높이를 24px로 정밀 고정하고 컨테이너 최대 높이를 53px로 맞춤 조절하여 접힌 상태에서 3번째 줄이 미세하게 노출되는 현상 방지
+  - 브라우저 창 크기 조절 시에도 실시간으로 2줄 초과 여부를 자동 재계산
+
 ## [1.20.1] - 2026-10-02
 
 ### ⚡ 성능 및 데이터 마이그레이션 (Performance & Data Migration)

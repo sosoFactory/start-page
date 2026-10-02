@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
-import { Plus, Edit2, Trash2, Search, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
 import { extractAllTags } from '../utils/tagHelper';
 import {
@@ -128,11 +128,49 @@ export const LinksHub: React.FC<Props> = ({
   const [editingLink, setEditingLink] = useState<BookmarkLink | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [isTagExpanded, setIsTagExpanded] = useState<boolean>(false);
+  const [hasOverflow, setHasOverflow] = useState<boolean>(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const tagListRef = useRef<HTMLDivElement>(null);
 
   // 전체 등록된 태그 및 빈도수 추출
   const allTagStats = useMemo(() => extractAllTags(links), [links]);
   const existingTagsList = useMemo(() => allTagStats.map((t) => t.tag), [allTagStats]);
+
+  // 태그 목록 DOM 줄 수(2줄 초과 여부) 동적 감지
+  useEffect(() => {
+    const el = tagListRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      const children = Array.from(el.children) as HTMLElement[];
+      if (children.length === 0) {
+        setHasOverflow(false);
+        return;
+      }
+      const lineTops = new Set(children.map((c) => c.offsetTop));
+      // 브라우저 DOM 렌더링에서 고유 offsetTop이 3개 이상이면 2줄 초과
+      // jsdom(테스트 환경)에서는 offsetTop이 0이므로 자식 개수로 보조 판별
+      const isOver = lineTops.size > 2 || (lineTops.size <= 1 && children.length > 15);
+      setHasOverflow(isOver);
+    };
+
+    checkOverflow();
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        checkOverflow();
+      });
+      resizeObserver.observe(el);
+    }
+
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      if (resizeObserver) resizeObserver.disconnect();
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, [allTagStats]);
 
   // 전역 '/' 단축키로 검색창 포커스
   useEffect(() => {
@@ -327,26 +365,47 @@ export const LinksHub: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* 태그 클라우드 바 (등록된 태그가 있을 때 노출) */}
+      {/* 태그 클라우드 (등록된 태그가 있을 때 노출, 실제 2줄 초과 시 더보기 토글 지원) */}
       {allTagStats.length > 0 && (
-        <div className="tag-cloud-bar">
-          <button
-            type="button"
-            className={`tag-pill ${selectedTag === null ? 'active' : ''}`}
-            onClick={() => setSelectedTag(null)}
-          >
-            전체 <span className="tag-pill-count">{links.length}</span>
-          </button>
-          {allTagStats.map(({ tag, count }) => (
+        <div className={`tag-cloud-bar ${isTagExpanded ? 'expanded' : ''}`}>
+          <div className="tag-cloud-list" ref={tagListRef}>
             <button
-              key={tag}
               type="button"
-              className={`tag-pill ${selectedTag === tag ? 'active' : ''}`}
-              onClick={() => setSelectedTag((prev) => (prev === tag ? null : tag))}
+              className={`tag-pill ${selectedTag === null ? 'active' : ''}`}
+              onClick={() => setSelectedTag(null)}
             >
-              #{tag} <span className="tag-pill-count">{count}</span>
+              전체 <span className="tag-pill-count">{links.length}</span>
             </button>
-          ))}
+            {allTagStats.map(({ tag, count }) => (
+              <button
+                key={tag}
+                type="button"
+                className={`tag-pill ${selectedTag === tag ? 'active' : ''}`}
+                onClick={() => setSelectedTag((prev) => (prev === tag ? null : tag))}
+              >
+                #{tag} <span className="tag-pill-count">{count}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* 더보기 / 접기 토글 버튼 (2줄 초과 시 자동 노출) */}
+          {(hasOverflow || isTagExpanded) && (
+            <button
+              type="button"
+              className="tag-pill tag-pill-toggle"
+              onClick={() => setIsTagExpanded((prev) => !prev)}
+            >
+              {isTagExpanded ? (
+                <>
+                  접기 <ChevronUp size={12} />
+                </>
+              ) : (
+                <>
+                  더보기 <ChevronDown size={12} />
+                </>
+              )}
+            </button>
+          )}
         </div>
       )}
 

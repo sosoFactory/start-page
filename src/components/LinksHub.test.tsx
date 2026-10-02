@@ -55,4 +55,30 @@ describe('LinksHub Component', () => {
     expect(screen.getByText('YouTube')).toBeTruthy();
     expect(screen.getByText('Naver')).toBeTruthy();
   });
+
+  it('shows more toggle button when tags exceed limit and expands on click', () => {
+    // Generate 20 distinct tags
+    const manyTags = Array.from({ length: 20 }, (_, i) => `태그${i + 1}`);
+    const linksWithManyTags: BookmarkLink[] = [
+      { id: '1', title: 'Test', url: 'https://test.com', tags: manyTags }
+    ];
+
+    render(
+      <LinksHub
+        links={linksWithManyTags}
+        onAddLink={vi.fn()}
+        onUpdateLink={vi.fn()}
+        onDeleteLink={vi.fn()}
+        onReorderLinks={vi.fn()}
+      />
+    );
+
+    const moreBtn = screen.getByRole('button', { name: /더보기/ });
+    expect(moreBtn).toBeTruthy();
+
+    fireEvent.click(moreBtn);
+
+    const collapseBtn = screen.getByRole('button', { name: /접기/ });
+    expect(collapseBtn).toBeTruthy();
+  });
 });

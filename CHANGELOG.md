@@ -3,6 +3,16 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.20.3] - 2026-10-02
+
+### ✨ 신규 기능 및 데이터 정규화 (Feature & Data Normalization)
+- **태그 대소문자 무시(Case-Insensitive) 통합 및 표준 정규화 시스템 도입 (`utils/tagHelper.ts`, `components/LinksHub.tsx`, `components/BookmarkModal.tsx`)**:
+  - `KNOWN_ACRONYMS` 사전을 통해 주요 약어(`AI`, `UI`, `UX`, `API`, `AWS`, `IT`, `DB`, `SQL`, `ML`, `GPT`, `LLM`, `PDF` 등) 자동 대문자 변환
+  - 영단어는 첫 글자 대문자인 Title Case(예: `git` ➔ `Git`, `notion` ➔ `Notion`, `dev` ➔ `Dev`)로 정규화하고 한글/숫자는 원본 형태 보존
+  - `git`, `Git`, `GIT` 등 대소문자가 다른 태그들을 태그 클라우드에서 `#Git (3)` 하나로 통합 집계
+  - 태그 클라우드에서 `#Git` 클릭 시 대소문자 상관없이 해당 태그를 가진 모든 북마크 즉시 필터링
+  - 북마크 관리 모달에서 대소문자 중복 입력 방지 및 추천 칩 중복 필터링 적용
+
 ## [1.20.2] - 2026-10-02
 
 ### 💄 UI/UX 및 반응형 개선 (UI/UX & Responsive Layout)

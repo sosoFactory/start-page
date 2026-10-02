@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BookmarkLink } from '../data/presetLinks';
 import { Plus, Edit2, Trash2, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { BookmarkModal } from './BookmarkModal';
-import { extractAllTags } from '../utils/tagHelper';
+import { extractAllTags, normalizeTag, cleanTags } from '../utils/tagHelper';
 import {
   extractDomain,
   getFaviconSources,
@@ -207,7 +207,10 @@ export const LinksHub: React.FC<Props> = ({
     let result = links;
 
     if (selectedTag) {
-      result = result.filter((link) => link.tags?.includes(selectedTag));
+      const targetLower = selectedTag.toLowerCase();
+      result = result.filter((link) =>
+        link.tags?.some((t) => t.toLowerCase() === targetLower)
+      );
     }
 
     if (isSearching) {
@@ -376,16 +379,19 @@ export const LinksHub: React.FC<Props> = ({
             >
               전체 <span className="tag-pill-count">{links.length}</span>
             </button>
-            {allTagStats.map(({ tag, count }) => (
-              <button
-                key={tag}
-                type="button"
-                className={`tag-pill ${selectedTag === tag ? 'active' : ''}`}
-                onClick={() => setSelectedTag((prev) => (prev === tag ? null : tag))}
-              >
-                #{tag} <span className="tag-pill-count">{count}</span>
-              </button>
-            ))}
+            {allTagStats.map(({ tag, count }) => {
+              const isSelected = selectedTag?.toLowerCase() === tag.toLowerCase();
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`tag-pill ${isSelected ? 'active' : ''}`}
+                  onClick={() => setSelectedTag((prev) => (prev && prev.toLowerCase() === tag.toLowerCase() ? null : tag))}
+                >
+                  #{tag} <span className="tag-pill-count">{count}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* 더보기 / 접기 토글 버튼 (2줄 초과 시 자동 노출) */}
@@ -489,13 +495,13 @@ export const LinksHub: React.FC<Props> = ({
                   {/* 타일 내 태그 뱃지 목록 */}
                   {link.tags && link.tags.length > 0 && (
                     <div className="link-tile-tags">
-                      {link.tags.slice(0, 3).map((tag) => (
+                      {cleanTags(link.tags).slice(0, 3).map((tag) => (
                         <span key={tag} className="link-tag-badge">
-                          #{tag}
+                          #{normalizeTag(tag)}
                         </span>
                       ))}
-                      {link.tags.length > 3 && (
-                        <span className="link-tag-more">+{link.tags.length - 3}</span>
+                      {cleanTags(link.tags).length > 3 && (
+                        <span className="link-tag-more">+{cleanTags(link.tags).length - 3}</span>
                       )}
                     </div>
                   )}

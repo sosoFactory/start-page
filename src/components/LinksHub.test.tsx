@@ -81,4 +81,36 @@ describe('LinksHub Component', () => {
     const collapseBtn = screen.getByRole('button', { name: /접기/ });
     expect(collapseBtn).toBeTruthy();
   });
+
+  it('filters links across case-insensitive tags (e.g. git, Git, GIT)', () => {
+    const caseLinks: BookmarkLink[] = [
+      { id: '1', title: 'GitLab', url: 'https://gitlab.com', tags: ['git'] },
+      { id: '2', title: 'GitHub', url: 'https://github.com', tags: ['Git'] },
+      { id: '3', title: 'GitBook', url: 'https://gitbook.com', tags: ['GIT'] },
+      { id: '4', title: 'Google', url: 'https://google.com', tags: ['포털'] }
+    ];
+
+    render(
+      <LinksHub
+        links={caseLinks}
+        onAddLink={vi.fn()}
+        onUpdateLink={vi.fn()}
+        onDeleteLink={vi.fn()}
+        onReorderLinks={vi.fn()}
+      />
+    );
+
+    // 태그 클라우드에는 #Git (3) 하나로 통합 노출
+    const gitTagBtn = screen.getByRole('button', { name: /#Git/ });
+    expect(gitTagBtn).toBeTruthy();
+    expect(screen.getByText('3')).toBeTruthy();
+
+    // 클릭 시 git, Git, GIT을 가진 모든 링크가 노출되고 Google은 제외
+    fireEvent.click(gitTagBtn);
+
+    expect(screen.getByText('GitLab')).toBeTruthy();
+    expect(screen.getByText('GitHub')).toBeTruthy();
+    expect(screen.getByText('GitBook')).toBeTruthy();
+    expect(screen.queryByText('Google')).toBeNull();
+  });
 });

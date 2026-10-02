@@ -3,15 +3,43 @@ import { normalizeTag, cleanTags, suggestTags, extractAllTags } from './tagHelpe
 import { BookmarkLink } from '../data/presetLinks';
 
 describe('tagHelper', () => {
-  it('normalizes tags by removing leading hash and extra whitespace', () => {
-    expect(normalizeTag('#개발')).toBe('개발');
-    expect(normalizeTag('  ##AI  ')).toBe('AI');
-    expect(normalizeTag('뉴스')).toBe('뉴스');
+  it('normalizes known acronyms to uppercase and English words to title case', () => {
+    expect(normalizeTag('ai')).toBe('AI');
+    expect(normalizeTag('Ui')).toBe('UI');
+    expect(normalizeTag('api')).toBe('API');
+    expect(normalizeTag('aws')).toBe('AWS');
+    expect(normalizeTag('etf')).toBe('ETF');
+    expect(normalizeTag('Etf')).toBe('ETF');
+    expect(normalizeTag('svg')).toBe('SVG');
+    expect(normalizeTag('Svg')).toBe('SVG');
+    expect(normalizeTag('png')).toBe('PNG');
+    expect(normalizeTag('jwt')).toBe('JWT');
+    expect(normalizeTag('cms')).toBe('CMS');
+    expect(normalizeTag('Cms')).toBe('CMS');
+    expect(normalizeTag('crm')).toBe('CRM');
+    expect(normalizeTag('GLTF')).toBe('GLTF');
+    expect(normalizeTag('git')).toBe('Git');
+    expect(normalizeTag('notion')).toBe('Notion');
+    expect(normalizeTag('DEVELOPER')).toBe('Developer');
+    expect(normalizeTag('개발')).toBe('개발');
   });
 
-  it('cleans tag arrays and removes duplicates and empty strings', () => {
-    const raw = ['#개발', '개발', '  ', 'AI', '#AI', ''];
-    expect(cleanTags(raw)).toEqual(['개발', 'AI']);
+  it('cleans tag arrays and removes case-insensitive duplicates', () => {
+    const raw = ['git', 'Git', 'GIT', '  ', 'ai', '#AI', ''];
+    expect(cleanTags(raw)).toEqual(['Git', 'AI']);
+  });
+
+  it('merges case-insensitive tags in extractAllTags', () => {
+    const mockLinks: BookmarkLink[] = [
+      { id: '1', title: 'A', url: 'https://a.com', tags: ['git', 'ai'] },
+      { id: '2', title: 'B', url: 'https://b.com', tags: ['Git', 'AI'] },
+      { id: '3', title: 'C', url: 'https://c.com', tags: ['GIT'] }
+    ];
+
+    const stats = extractAllTags(mockLinks);
+    expect(stats).toHaveLength(2);
+    expect(stats.find((s) => s.tag === 'Git')?.count).toBe(3);
+    expect(stats.find((s) => s.tag === 'AI')?.count).toBe(2);
   });
 
   it('suggests tags based on URL and title keywords', () => {

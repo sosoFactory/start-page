@@ -57,7 +57,7 @@ export const BookmarkModal: React.FC<Props> = ({
   const handleAddTag = (rawTag: string) => {
     const cleaned = normalizeTag(rawTag);
     if (!cleaned) return;
-    if (!tags.includes(cleaned)) {
+    if (!tags.some((t) => t.toLowerCase() === cleaned.toLowerCase())) {
       setTags([...tags, cleaned]);
     }
     setHasManuallyEditedTags(true);
@@ -65,7 +65,7 @@ export const BookmarkModal: React.FC<Props> = ({
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((t) => t !== tagToRemove));
+    setTags(tags.filter((t) => t.toLowerCase() !== tagToRemove.toLowerCase()));
     setHasManuallyEditedTags(true);
   };
 
@@ -87,7 +87,7 @@ export const BookmarkModal: React.FC<Props> = ({
     let finalTags = [...tags];
     if (tagInput.trim()) {
       const pending = normalizeTag(tagInput);
-      if (pending && !finalTags.includes(pending)) {
+      if (pending && !finalTags.some((t) => t.toLowerCase() === pending.toLowerCase())) {
         finalTags.push(pending);
       }
     }
@@ -106,8 +106,10 @@ export const BookmarkModal: React.FC<Props> = ({
     onClose();
   };
 
-  // 아직 추가되지 않은 추천 태그 필터링
-  const availableSuggestions = suggestedTags.filter((st) => !tags.includes(st));
+  // 아직 추가되지 않은 추천 태그 필터링 (대소문자 무시)
+  const availableSuggestions = suggestedTags.filter(
+    (st) => !tags.some((t) => t.toLowerCase() === st.toLowerCase())
+  );
 
   return (
     <Modal

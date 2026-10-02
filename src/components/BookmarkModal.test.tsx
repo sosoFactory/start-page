@@ -65,4 +65,39 @@ describe('BookmarkModal', () => {
       })
     );
   });
+
+  it('normalizes tags automatically on input (e.g. git -> Git, ai -> AI)', () => {
+    const handleSave = vi.fn();
+    render(
+      <BookmarkModal
+        isOpen={true}
+        onClose={vi.fn()}
+        onSave={handleSave}
+        existingTags={[]}
+      />
+    );
+
+    const urlInput = screen.getByPlaceholderText('예: naver.com, https://github.com');
+    fireEvent.change(urlInput, { target: { value: 'https://github.com' } });
+
+    const tagInput = screen.getByPlaceholderText(/태그/);
+    fireEvent.change(tagInput, { target: { value: 'git' } });
+    fireEvent.keyDown(tagInput, { key: 'Enter', code: 'Enter' });
+
+    expect(screen.getByText('#Git')).toBeTruthy();
+
+    fireEvent.change(tagInput, { target: { value: 'ai' } });
+    fireEvent.keyDown(tagInput, { key: 'Enter', code: 'Enter' });
+
+    expect(screen.getByText('#AI')).toBeTruthy();
+
+    const submitBtn = screen.getByRole('button', { name: '추가하기' });
+    fireEvent.click(submitBtn);
+
+    expect(handleSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tags: expect.arrayContaining(['Git', 'AI'])
+      })
+    );
+  });
 });

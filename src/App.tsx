@@ -13,11 +13,37 @@ import { HeaderClock } from './components/HeaderClock';
 import { SettingsModal } from './components/SettingsModal';
 import { Footer } from './components/Footer';
 import { Settings } from 'lucide-react';
+import { suggestTags } from './utils/tagHelper';
 import './styles/app.css';
 
 export const App: React.FC = () => {
   // 1. 링크 목록 상태 관리
   const [links, setLinks] = useLocalStorage<BookmarkLink[]>('saniti_links_v1', PRESET_LINKS);
+
+  // 기존에 등록된 북마크 중 태그가 없는 항목에 대해 최초 1회만 스마트 태그 마이그레이션 적용
+  useEffect(() => {
+    const isMigrated = localStorage.getItem('saniti_tag_migrated_v1');
+    if (isMigrated) return;
+
+    if (links && links.length > 0) {
+      let hasUpdated = false;
+      const migrated = links.map((link) => {
+        if (!link.tags || link.tags.length === 0) {
+          const autoTags = suggestTags(link.url, link.title);
+          if (autoTags.length > 0) {
+            hasUpdated = true;
+            return { ...link, tags: autoTags };
+          }
+        }
+        return link;
+      });
+
+      if (hasUpdated) {
+        setLinks(migrated);
+      }
+      localStorage.setItem('saniti_tag_migrated_v1', 'true');
+    }
+  }, [links, setLinks]);
 
   // 2. 대시보드 환경설정 상태 관리
   const [settings, setSettings] = useLocalStorage<DashboardSettings>('saniti_settings_v1', DEFAULT_SETTINGS);

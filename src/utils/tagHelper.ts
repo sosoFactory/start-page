@@ -11,47 +11,47 @@ interface TagRule {
 const TAG_RULES: TagRule[] = [
   {
     tag: '개발',
-    keywords: ['github', 'gitlab', 'stackoverflow', 'npm', 'yarn', 'deno', 'developer', 'react', 'vue', 'python', 'rust', 'golang', 'docker', 'kubernetes', 'aws', 'gcp', 'azure', 'vercel', 'netlify', 'git', 'dev', 'code']
+    keywords: ['github', 'gitlab', 'stackoverflow', 'npm', 'yarn', 'deno', 'developer', 'react', 'vue', 'python', 'rust', 'golang', 'docker', 'kubernetes', 'aws', 'gcp', 'azure', 'vercel', 'netlify', 'git', 'dev', 'code', '개발', '코딩', '깃허브', 'tina']
   },
   {
     tag: 'AI',
-    keywords: ['chatgpt', 'claude', 'gemini', 'openai', 'anthropic', 'deepmind', 'perplexity', 'midjourney', 'huggingface', 'cursor', 'copilot', 'suno', 'runway', 'ai']
+    keywords: ['chatgpt', 'claude', 'gemini', 'openai', 'anthropic', 'deepmind', 'perplexity', 'midjourney', 'huggingface', 'cursor', 'copilot', 'suno', 'runway', 'ai', '인공지능', '챗gpt', '클로드', '제미나이']
   },
   {
     tag: '미디어',
-    keywords: ['youtube', 'netflix', 'chzzk', 'twitch', 'wavve', 'tving', 'watcha', 'disney', 'spotify', 'soundcloud', 'melon', 'video', 'tv', 'movie']
+    keywords: ['youtube', 'netflix', 'chzzk', 'twitch', 'wavve', 'tving', 'watcha', 'disney', 'spotify', 'soundcloud', 'melon', 'video', 'tv', 'movie', '유튜브', '넷플릭스', '치지직', '영상', '음악']
   },
   {
     tag: '포털',
-    keywords: ['naver', 'daum', 'google', 'bing', 'yahoo', 'nate', 'zum']
+    keywords: ['naver', 'daum', 'google', 'bing', 'yahoo', 'nate', 'zum', '네이버', '다음', '구글']
   },
   {
     tag: '검색',
-    keywords: ['google', 'naver', 'bing', 'daum', 'duckduckgo', 'search']
+    keywords: ['google', 'naver', 'bing', 'daum', 'duckduckgo', 'search', '검색']
   },
   {
     tag: '업무',
-    keywords: ['notion', 'slack', 'jira', 'confluence', 'figma', 'miro', 'linear', 'asana', 'trello', 'zoom', 'drive.google', 'docs.google', 'mail', 'cal']
+    keywords: ['notion', 'slack', 'jira', 'confluence', 'figma', 'miro', 'linear', 'asana', 'trello', 'zoom', 'drive.google', 'docs.google', 'mail', 'cal', '노션', '슬랙', '피그마', '업무', '문서', '협업']
   },
   {
     tag: '블로그',
-    keywords: ['velog', 'tistory', 'medium', 'brunch', 'blog', 'ghost', 'substack']
+    keywords: ['velog', 'tistory', 'medium', 'brunch', 'blog', 'ghost', 'substack', '벨로그', '티스토리', '미디엄', '브런치', '블로그']
   },
   {
     tag: '투자',
-    keywords: ['upbit', 'bithumb', 'binance', 'coinmarketcap', 'finance', 'invest', 'stock', 'toss', 'tradingview', 'quant', 'bitcoin', 'crypto']
+    keywords: ['upbit', 'bithumb', 'binance', 'coinmarketcap', 'finance', 'invest', 'stock', 'toss', 'tradingview', 'quant', 'bitcoin', 'crypto', '업비트', '빗썸', '바이낸스', '비트코인', '퀀트', '주식', '투자', '증권', '코인']
   },
   {
     tag: '쇼핑',
-    keywords: ['coupang', 'smartstore', '11st', 'gmarket', 'auction', 'amazon', 'aliexpress', 'ssg', 'kurly', 'musinsa', '29cm']
+    keywords: ['coupang', 'smartstore', '11st', 'gmarket', 'auction', 'amazon', 'aliexpress', 'ssg', 'kurly', 'musinsa', '29cm', '쿠팡', '스마트스토어', '쇼핑', '무신사']
   },
   {
     tag: '커뮤니티',
-    keywords: ['reddit', 'dcinside', 'fmkorea', 'ruliweb', 'clien', 'ppomppu', 'inven', 'blind', 'threads', 'x.com', 'twitter']
+    keywords: ['reddit', 'dcinside', 'fmkorea', 'ruliweb', 'clien', 'ppomppu', 'inven', 'blind', 'threads', 'x.com', 'twitter', '디시', '클리앙', '뽐뿌', '인벤', '블라인드', '커뮤니티']
   },
   {
     tag: '뉴스',
-    keywords: ['news', 'yonhap', 'chosun', 'donga', 'joongang', 'hankyoreh', 'bbc', 'cnn', 'bloomberg', 'reuters']
+    keywords: ['news', 'yonhap', 'chosun', 'donga', 'joongang', 'hankyoreh', 'bbc', 'cnn', 'bloomberg', 'reuters', '연합뉴스', '뉴스', '신문']
   }
 ];
 

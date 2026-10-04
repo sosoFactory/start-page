@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Sliders, Database, HelpCircle, Download, Upload, RotateCcw, ShieldCheck, Star, Keyboard } from 'lucide-react';
+import { Sliders, Database, HelpCircle, Download, Upload, RotateCcw, ShieldCheck, Star, Keyboard, Monitor, Sun, Moon } from 'lucide-react';
 import { BookmarkLink } from '../data/presetLinks';
 import { DashboardSettings } from '../types/settings';
 import { Modal } from './common/Modal';
@@ -136,6 +136,43 @@ export const SettingsModal: React.FC<Props> = ({
           <div className="settings-section-title">
             <Sliders size={14} className="settings-section-icon" />
             <span>일반 설정</span>
+          </div>
+
+          {/* 테마 모드 선택 */}
+          <div className="settings-item-row">
+            <div className="settings-item-info">
+              <span className="settings-item-label">테마 모드</span>
+              <span className="settings-item-desc">대시보드 화면 테마 (시스템/라이트/다크)</span>
+            </div>
+            <div className="settings-segmented-control">
+              <button
+                type="button"
+                className={`segmented-btn ${settings.theme === 'system' ? 'active' : ''}`}
+                onClick={() => onUpdateSettings({ ...settings, theme: 'system' })}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              >
+                <Monitor size={12} />
+                <span>시스템</span>
+              </button>
+              <button
+                type="button"
+                className={`segmented-btn ${settings.theme === 'light' ? 'active' : ''}`}
+                onClick={() => onUpdateSettings({ ...settings, theme: 'light' })}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              >
+                <Sun size={12} />
+                <span>라이트</span>
+              </button>
+              <button
+                type="button"
+                className={`segmented-btn ${settings.theme === 'dark' ? 'active' : ''}`}
+                onClick={() => onUpdateSettings({ ...settings, theme: 'dark' })}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              >
+                <Moon size={12} />
+                <span>다크</span>
+              </button>
+            </div>
           </div>
 
           <div className="settings-item-row">

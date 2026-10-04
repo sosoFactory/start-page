@@ -49,6 +49,30 @@ export const App: React.FC = () => {
   const [settings, setSettings] = useLocalStorage<DashboardSettings>('saniti_settings_v1', DEFAULT_SETTINGS);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  // 테마 모드 적용 (system / light / dark)
+  useEffect(() => {
+    const root = document.documentElement;
+    const currentTheme = settings.theme || 'system';
+
+    const applyTheme = (mode: 'light' | 'dark') => {
+      root.setAttribute('data-theme', mode);
+    };
+
+    if (currentTheme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(mediaQuery.matches ? 'dark' : 'light');
+
+      const handleThemeChange = (e: MediaQueryListEvent) => {
+        applyTheme(e.matches ? 'dark' : 'light');
+      };
+
+      mediaQuery.addEventListener('change', handleThemeChange);
+      return () => mediaQuery.removeEventListener('change', handleThemeChange);
+    } else {
+      applyTheme(currentTheme);
+    }
+  }, [settings.theme]);
+
   // 3. 오늘의 할 일 및 탭 상태 관리
   const [tabs, setTabs] = useLocalStorage<TodoTab[]>('saniti_todo_tabs_v1', DEFAULT_TODO_TABS);
   const [activeTabId, setActiveTabId] = useLocalStorage<string>('saniti_active_todo_tab_v1', DEFAULT_TODO_TAB_ID);

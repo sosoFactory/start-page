@@ -3,6 +3,16 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.22.0] - 2026-10-04
+
+### ✨ 신규 기능 (Feature)
+- **다크 테마(Dark Theme) 및 OS 시스템 테마 실시간 동기화 지원 (`App.tsx`, `saniti-tokens.css`, `app.css`, `SettingsModal.tsx`)**:
+  - `ThemeMode` (`'system'` | `'light'` | `'dark'`) 설정 추가 및 기본값 `'system'` 적용
+  - `window.matchMedia('(prefers-color-scheme: dark)')` 이벤트 리스너를 통한 운영체제/브라우저 테마 변경 실시간 감지
+  - `[data-theme="dark"]` 디자인 토큰 팔레트 구축 (Slate 딥 다크 배경, 눈의 피로를 최소화하는 가독성 대비율 및 코랄 포인트 유지)
+  - 링크 허브, 태그 클라우드, 할 일 탭/드래그 핸들, 날씨 예보 바 차트, 모달 다이얼로그, 툴팁 등 전역 컴포넌트 다크 테마 최적화
+  - 설정 모달 내 `시스템 (모니터)`, `라이트 (해)`, `다크 (달)` 3단 세그먼트 버튼 컨트롤 제공
+
 ## [1.21.3] - 2026-10-04
 
 ### 💄 UI/UX 및 텍스트 개선 (UI/UX & Copy)

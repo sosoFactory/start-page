@@ -110,12 +110,7 @@ export const RainForecastCard: React.FC<Props> = ({
         <div className="rain-highlight-grid">
           {/* 오늘 카드 (주요 강조) */}
           <div
-            className="rain-day-card"
-            style={{
-              backgroundColor: '#ffffff',
-              borderColor: '#cbd5e1',
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.04)'
-            }}
+            className="rain-day-card today-highlight"
           >
             <div className="rain-day-header">
               <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600 }}>
@@ -127,7 +122,7 @@ export const RainForecastCard: React.FC<Props> = ({
                   fontSize: '11px',
                   fontWeight: 700,
                   backgroundColor: 'var(--color-ink)',
-                  color: '#ffffff',
+                  color: 'var(--color-canvas)',
                   padding: '2px 8px',
                   borderRadius: '4px',
                   letterSpacing: '0.02em'
@@ -218,7 +213,7 @@ export const RainForecastCard: React.FC<Props> = ({
               <BarChart data={chartData} margin={{ top: 8, right: 6, left: -25, bottom: 0 }}>
                 <XAxis
                   dataKey="hour"
-                  stroke="#cbd5e1"
+                  stroke="var(--color-hairline)"
                   tick={({ x, y, payload, index }) => {
                     const isNow = chartData[index]?.isNow;
                     return (
@@ -226,7 +221,7 @@ export const RainForecastCard: React.FC<Props> = ({
                         x={x}
                         y={y + 12}
                         textAnchor="middle"
-                        fill={isNow ? '#f36458' : '#64748b'}
+                        fill={isNow ? 'var(--color-brand)' : 'var(--color-slate-soft)'}
                         fontSize={9.5}
                         fontWeight={isNow ? 700 : 500}
                         fontFamily="'Pretendard', sans-serif"
@@ -235,34 +230,34 @@ export const RainForecastCard: React.FC<Props> = ({
                       </text>
                     );
                   }}
-                  axisLine={{ stroke: '#e2e8f0' }}
+                  axisLine={{ stroke: 'var(--color-hairline)' }}
                   tickLine={false}
                   interval={0}
                 />
                 <Tooltip
-                  cursor={{ fill: 'rgba(0, 0, 0, 0.03)' }}
+                  cursor={{ fill: 'rgba(243, 100, 88, 0.08)' }}
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
                         <div
                           style={{
-                            backgroundColor: '#ffffff',
-                            border: '1px solid #e2e8f0',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                            backgroundColor: 'var(--color-canvas-card)',
+                            border: '1px solid var(--color-hairline)',
+                            boxShadow: 'var(--shadow-hover)',
                             padding: '6px 10px',
                             borderRadius: '6px',
                             fontSize: '11px',
                             fontFamily: "'Pretendard', sans-serif"
                           }}
                         >
-                          <div style={{ color: '#64748b', marginBottom: '2px', fontWeight: 600 }}>
+                          <div style={{ color: 'var(--color-slate-soft)', marginBottom: '2px', fontWeight: 600 }}>
                             {data.isNow ? '● 지금 실시간' : data.isToday ? '오늘' : '내일'} {data.hour}
                           </div>
-                          <div style={{ color: '#0284c7', fontWeight: 700 }}>
+                          <div style={{ color: 'var(--color-rain-blue)', fontWeight: 700 }}>
                             강수확률: {data.rainProb}%
                           </div>
-                          <div style={{ color: '#1e293b', fontWeight: 500 }}>
+                          <div style={{ color: 'var(--color-ink)', fontWeight: 500 }}>
                             기온: {data.temp}°C
                           </div>
                         </div>
@@ -271,12 +266,12 @@ export const RainForecastCard: React.FC<Props> = ({
                     return null;
                   }}
                 />
-                <ReferenceLine y={50} stroke="#f36458" strokeDasharray="3 3" opacity={0.5} />
+                <ReferenceLine y={50} stroke="var(--color-brand)" strokeDasharray="3 3" opacity={0.6} />
                 <Bar dataKey="rainProb" radius={[2, 2, 0, 0]}>
                   {chartData.map((entry, index) => {
-                    let barFill = entry.rainProb >= 50 ? '#0284c7' : entry.rainProb >= 20 ? '#38bdf8' : '#e2e8f0';
+                    let barFill = entry.rainProb >= 50 ? 'var(--color-rain-high)' : entry.rainProb >= 20 ? 'var(--color-rain-blue)' : 'var(--color-hairline)';
                     if (entry.isNow) {
-                      barFill = '#f36458';
+                      barFill = 'var(--color-brand)';
                     }
                     return <Cell key={`cell-${index}`} fill={barFill} />;
                   })}

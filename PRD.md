@@ -197,6 +197,20 @@
 
 ---
 
+### 3.9 🌓 다크 테마 시스템 및 시스템 테마 연동 (Dark Theme & System Sync)
+1. **3가지 테마 모드 지원**:
+   - **시스템 설정 (자동)**: 운영체제(OS) 및 브라우저의 `prefers-color-scheme` 상태를 실시간 감지하여 라이트/다크 테마 자동 전환.
+   - **라이트 모드 (Light)**: 깔끔하고 산뜻한 기존 Saniti Light 페이퍼 테마 고정.
+   - **다크 모드 (Dark)**: 야간 및 저조도 환경에서 눈의 피로를 최소화하는 정갈한 Slate 다크 테마(`#0f172a`, `#1e293b`).
+2. **시각적 완성도 및 토큰 기반 스타일링**:
+   - `[data-theme="dark"]` CSS 변수 토큰 시스템을 통해 카드 배경, 텍스트, 헤어라인 테두리, 모달, 툴팁, 폼 인풋, 스크롤바, 태그 칩 등 전역 UI 완벽 대응.
+   - Recharts 강수확률 예보 바 차트 및 툴팁도 다크 테마에 최적화된 대비율과 시인성 확보.
+3. **환경설정 UI 연동**:
+   - `SettingsModal` 내 "일반 설정" 섹션에 `시스템`, `라이트`, `다크` 3단 세그먼트 버튼 컨트롤 제공.
+   - 로컬 스토리지(`saniti_settings_v1`)에 영속화되어 새로고침 및 새 탭 오픈 시에도 깜빡임(FOUC) 없이 즉시 적용.
+
+---
+
 ## 4. 데이터 모델 및 스토리지 명세
 
 ### 4.1 북마크 데이터 (`BookmarkLink`)
@@ -211,7 +225,10 @@ export interface BookmarkLink {
 
 ### 4.2 대시보드 환경설정 (`DashboardSettings`)
 ```typescript
+export type ThemeMode = 'system' | 'light' | 'dark';
+
 export interface DashboardSettings {
+  theme: ThemeMode;             // 테마 모드 (기본: 'system')
   openInNewTab: boolean;        // 링크 새 탭 열기 여부 (기본: false)
   showClock: boolean;           // 헤더 시계 표시 여부 (기본: true)
   clockFormat: '24h' | '12h';   // 시간 포맷 (기본: '24h')
@@ -255,7 +272,8 @@ export interface TodoItem {
 - [x] **모던 커스텀 툴팁 시스템 (`[data-tooltip]`)**
 - [x] **공통 모달 컴포넌트 및 자연스러운 애니메이션 (`Modal.tsx`)**
 - [x] **단축키 지원**: `/` 키로 바로가기 검색창 포커스
+- [x] **다크 테마 및 시스템 테마 연동 (`system` / `light` / `dark`)**
 - [ ] **우측 사이드바 모듈 동적 교체 시스템**: 할 일 목록(`TodoCard`) / 주요 시세(`StockCard`) / 메모 등 사용자 선택 전환
-- [ ] **테마 개인화**: 다크 모드 및 커스텀 배경 옵션
 - [ ] **날씨 위젯 다중 지역 즐겨찾기 탭 전환**
+
  

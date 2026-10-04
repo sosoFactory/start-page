@@ -275,6 +275,12 @@ export interface TodoItem {
 - [x] **공통 모달 컴포넌트 및 자연스러운 애니메이션 (`Modal.tsx`)**
 - [x] **단축키 지원**: `/` 키로 바로가기 검색창 포커스
 - [x] **다크 테마 및 시스템 테마 연동 (`system` / `light` / `dark`)**
+- [ ] **🚀 Chrome 웹스토어(Chrome Web Store) 공식 확장 프로그램 등록 및 배포**
+  - [ ] `dist` 확장 프로그램 빌드 및 ZIP 패키징 (`startpage-extension-v1.22.0.zip`)
+  - [ ] 웹스토어 규격 스토어 스크린샷 (1280×800px) 및 128px 아이콘 세트 점검
+  - [ ] 단일 목적(Single Purpose) 설명문 및 권한 소명서(Permission Justification) 작성
+  - [ ] 개인정보처리방침(Privacy Policy - 100% 로컬 저장, 무수집) 문서 작성 및 배포
+  - [ ] Chrome 개발자 대시보드 등록 및 심사 제출 가이드
 - [ ] **우측 사이드바 모듈 동적 교체 시스템**: 할 일 목록(`TodoCard`) / 주요 시세(`StockCard`) / 메모 등 사용자 선택 전환
 - [ ] **날씨 위젯 다중 지역 즐겨찾기 탭 전환**
 

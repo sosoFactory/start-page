@@ -253,17 +253,17 @@ export const TodoCard: React.FC<Props> = ({
           )}
         </div>
 
-        {/* 완료 정리 버튼 */}
+        {/* 완료 삭제 버튼 */}
         <button
           type="button"
           className="todo-clear-completed-btn"
           onClick={() => onClearCompleted(currentTabId)}
           disabled={currentCompletedCount === 0}
-          data-tooltip={currentCompletedCount > 0 ? `'${currentTab?.name || '현재 탭'}' 완료 항목 정리` : undefined}
+          data-tooltip={currentCompletedCount > 0 ? `'${currentTab?.name || '현재 탭'}' 완료 항목 삭제` : undefined}
           data-tooltip-pos="bottom-left"
-          aria-label="완료된 항목 모두 정리"
+          aria-label="완료된 항목 모두 삭제"
         >
-          완료 정리
+          완료 삭제
         </button>
       </div>
 

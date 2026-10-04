@@ -24,7 +24,7 @@ describe('TodoCard', () => {
     expect(screen.getByText('1/2 완료')).toBeTruthy();
     expect(screen.getByText('테스트 할 일 1')).toBeTruthy();
     expect(screen.getByText('테스트 할 일 2')).toBeTruthy();
-    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 정리' });
+    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 삭제' });
     expect(clearBtn).toBeTruthy();
     expect((clearBtn as HTMLButtonElement).disabled).toBe(false);
   });
@@ -44,7 +44,7 @@ describe('TodoCard', () => {
       />
     );
 
-    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 정리' }) as HTMLButtonElement;
+    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 삭제' }) as HTMLButtonElement;
     expect(clearBtn.disabled).toBe(true);
   });
 
@@ -138,7 +138,7 @@ describe('TodoCard', () => {
       />
     );
 
-    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 정리' });
+    const clearBtn = screen.getByRole('button', { name: '완료된 항목 모두 삭제' });
     fireEvent.click(clearBtn);
 
     expect(handleClear).toHaveBeenCalledWith('default');

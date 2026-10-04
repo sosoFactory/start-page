@@ -148,16 +148,16 @@ export const StockCard: React.FC = () => {
                     return (
                       <div
                         style={{
-                          backgroundColor: '#ffffff',
-                          border: '1px solid #e2e8f0',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                          backgroundColor: 'var(--color-canvas-card)',
+                          border: '1px solid var(--color-hairline)',
+                          boxShadow: 'var(--shadow-hover)',
                           padding: '6px 10px',
                           borderRadius: '6px',
                           fontSize: '11px',
                           fontFamily: 'var(--font-sans)'
                         }}
                       >
-                        <div style={{ color: '#64748b', fontWeight: 500 }}>{data.time}</div>
+                        <div style={{ color: 'var(--color-slate-soft)', fontWeight: 500 }}>{data.time}</div>
                         <div style={{ color: chartColor, fontWeight: 700 }}>
                           {data.value.toLocaleString()} {currentStock.unit}
                         </div>

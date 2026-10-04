@@ -1,4 +1,6 @@
 :root {
+  color-scheme: light;
+
   /* Saniti 디자인 시스템 색상 토큰 (라이트 / 페이퍼 모드) */
   --color-primary: #111827;
   --color-on-primary: #111827;
@@ -57,28 +59,30 @@
 }
 
 [data-theme="dark"] {
-  /* Saniti 디자인 시스템 색상 토큰 (다크 모드) */
+  color-scheme: dark;
+
+  /* Saniti 디자인 시스템 색상 토큰 (세련된 Slate 딥 다크 모드) */
   --color-primary: #f8fafc;
   --color-on-primary: #f8fafc;
   --color-brand: #f36458;
-  --color-brand-deep: #ff766b;
+  --color-brand-deep: #ff7b70;
   --color-brand-glow: rgba(243, 100, 88, 0.35);
-  --color-ink: #f1f5f9;
+  --color-ink: #f3f4f6;
   --color-ink-soft: #cbd5e1;
   --color-graphite: #334155;
   --color-slate: #94a3b8;
-  --color-slate-soft: #64748b;
-  --color-mute: #475569;
+  --color-slate-soft: #6b7280;
+  --color-mute: #4b5563;
   --color-ash: #94a3b8;
   --color-ash-light: #e2e8f0;
-  --color-hairline: #263347;
-  --color-hairline-soft: #1e293b;
-  --color-canvas: #0b0f19;
-  --color-canvas-soft: #111827;
-  --color-canvas-card: #131b2e;
-  --color-canvas-elevated: #1e293b;
-  --color-canvas-light: #1e293b;
-  --color-canvas-paper: #192237;
+  --color-hairline: #232f48;
+  --color-hairline-soft: #182236;
+  --color-canvas: #0a0e17;
+  --color-canvas-soft: #101623;
+  --color-canvas-card: #131b2a;
+  --color-canvas-elevated: #1c263b;
+  --color-canvas-light: #1c263b;
+  --color-canvas-paper: #172033;
   --color-link-blue: #38bdf8;
   --color-link-blue-soft: #0ea5e9;
   --color-rain-blue: #38bdf8;
@@ -89,8 +93,8 @@
   --color-stock-down: #60a5fa;
 
   /* 다크 모드 그림자 */
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.55);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 *, *::before, *::after {

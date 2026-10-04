@@ -116,18 +116,7 @@ export const RainForecastCard: React.FC<Props> = ({
               <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600 }}>
                 강수확률
               </span>
-              <span
-                className="rain-day-tag"
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  backgroundColor: 'var(--color-ink)',
-                  color: 'var(--color-canvas)',
-                  padding: '2px 8px',
-                  borderRadius: '4px',
-                  letterSpacing: '0.02em'
-                }}
-              >
+              <span className="rain-day-tag today">
                 오늘
               </span>
             </div>
@@ -153,17 +142,7 @@ export const RainForecastCard: React.FC<Props> = ({
               <span style={{ fontSize: '11.5px', color: 'var(--color-slate-soft)', fontWeight: 600 }}>
                 강수확률
               </span>
-              <span
-                className="rain-day-tag"
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 500,
-                  backgroundColor: 'var(--color-canvas-elevated)',
-                  color: 'var(--color-slate)',
-                  padding: '2px 8px',
-                  borderRadius: '4px'
-                }}
-              >
+              <span className="rain-day-tag tomorrow">
                 내일
               </span>
             </div>
@@ -203,7 +182,7 @@ export const RainForecastCard: React.FC<Props> = ({
                 top: 0,
                 bottom: 24,
                 left: `calc(${dividerPercent}% - 6px)`,
-                borderLeft: '1.5px dashed #94a3b8',
+                borderLeft: '1.5px dashed var(--color-hairline)',
                 zIndex: 1,
                 pointerEvents: 'none'
               }}

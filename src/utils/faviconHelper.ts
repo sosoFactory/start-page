@@ -153,22 +153,29 @@ export const getSmartInitial = (title: string, url: string): string => {
 };
 
 /**
- * 7대 감각적인 파스텔 브랜드 테마 세트 (배경색 및 텍스트 색상)
+ * 7대 감각적인 파스텔 브랜드 테마 세트 (라이트 / 다크 듀얼 팔레트)
  */
-const BADGE_THEMES = [
-  { bg: '#fee2e2', color: '#e11d48' }, // 코랄/로즈
-  { bg: '#e0e7ff', color: '#4338ca' }, // 인디고/블루
-  { bg: '#dcfce7', color: '#15803d' }, // 에메랄드
-  { bg: '#e0f2fe', color: '#0369a1' }, // 스카이블루/오션
-  { bg: '#f3e8ff', color: '#7e22ce' }, // 바이올렛/퍼플
-  { bg: '#fef3c7', color: '#b45309' }, // 앰버/골드
-  { bg: '#f1f5f9', color: '#334155' }  // 모던 슬레이트
+export interface BadgeTheme {
+  bg: string;
+  color: string;
+  darkBg: string;
+  darkColor: string;
+}
+
+const BADGE_THEMES: BadgeTheme[] = [
+  { bg: '#fee2e2', color: '#e11d48', darkBg: 'rgba(244, 63, 94, 0.2)', darkColor: '#fda4af' }, // 코랄/로즈
+  { bg: '#e0e7ff', color: '#4338ca', darkBg: 'rgba(99, 102, 241, 0.2)', darkColor: '#a5b4fc' }, // 인디고/블루
+  { bg: '#dcfce7', color: '#15803d', darkBg: 'rgba(34, 197, 94, 0.2)', darkColor: '#86efac' },  // 에메랄드
+  { bg: '#e0f2fe', color: '#0369a1', darkBg: 'rgba(14, 165, 233, 0.2)', darkColor: '#7dd3fc' }, // 스카이블루/오션
+  { bg: '#f3e8ff', color: '#7e22ce', darkBg: 'rgba(168, 85, 247, 0.2)', darkColor: '#d8b4fe' }, // 바이올렛/퍼플
+  { bg: '#fef3c7', color: '#b45309', darkBg: 'rgba(245, 158, 11, 0.2)', darkColor: '#fcd34d' }, // 앰버/골드
+  { bg: '#f1f5f9', color: '#334155', darkBg: 'rgba(148, 163, 184, 0.2)', darkColor: '#cbd5e1' }  // 모던 슬레이트
 ];
 
 /**
  * 문자열 해시 기반 일관된 뱃지 테마 반환
  */
-export const getInitialBadgeTheme = (seed: string): { bg: string; color: string } => {
+export const getInitialBadgeTheme = (seed: string): BadgeTheme => {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = seed.charCodeAt(i) + ((hash << 5) - hash);

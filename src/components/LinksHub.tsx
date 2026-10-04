@@ -90,10 +90,12 @@ const FaviconImage: React.FC<{ url: string; title: string }> = ({ url, title }) 
       <div
         className="link-favicon-badge"
         style={{
-          backgroundColor: theme.bg,
-          color: theme.color,
+          '--badge-bg': theme.bg,
+          '--badge-color': theme.color,
+          '--badge-dark-bg': theme.darkBg,
+          '--badge-dark-color': theme.darkColor,
           fontSize: isSingleChar ? '11px' : '9.5px'
-        }}
+        } as React.CSSProperties}
         title={title || domain}
       >
         {initialText}

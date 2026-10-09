@@ -97,16 +97,19 @@
 4. **모달 레이아웃 및 헤더 정렬**:
    - 모달 헤더 좌측의 아이콘과 제목 간 `flex` 수평 중앙 정렬 및 여백 확보로 시각적 깨짐 방지.
    - 모달 내부 데이터 관리 행에서 내보내기/가져오기/초기화 버튼 영역이 텍스트 길이에 밀리거나 줄바꿈되어 깨지지 않도록 `flex-shrink: 0`, `white-space: nowrap` 및 일관된 보조 버튼 스타일(`btn-secondary`, `btn-danger-outline`) 보장.
-3. **일반 설정 (General Settings)**:
+5. **일반 설정 (General Settings)**:
+   - **테마 모드 (Theme Mode)**: `시스템 (기본값, OS 다크모드 연동)` vs `라이트` vs `다크` 세그먼트 컨트롤.
+     - **기본값 명시적 주입 및 보장 (Default Value Enforcement)**: 테마의 기본값은 항상 **`시스템 (system)`**으로 정의되며, 기존 스토리지에 `theme` 필드가 누락되어 있더라도 `useLocalStorage` 로딩 시 기본값 객체(`DEFAULT_SETTINGS`)와 자동 병합(`{ ...initialValue, ...parsed }`)되어 상태(State) 및 스토리지 자체에 `theme: 'system'`이 명시적으로 주입·저장됨.
+     - **스토리지 스키마 자동 병합 (Schema Merge)**: `useLocalStorage`에서 `initialValue` 기본값 객체와 기존 저장 데이터를 안전하게 병합하여 향후 신규 설정 항목 추가 시에도 기본값이 항상 보장되는 하위 호환성 유지.
    - **링크 열기 방식**: `현재 탭 (_self, 기본)` vs `새 탭 (_blank)` 선택 지원.
    - **헤더 시계 표시**: 시계 위젯 표시 토글 (ON / OFF, 기본 ON).
    - **시간 표기 방식**: `24시간제 (예: 14:30)` vs `12시간제 (예: 오후 2:30)` 선택.
    - **초(Seconds) 단위 표시**: `14:30:15` vs `14:30` 토글.
-3. **데이터 관리 (Data Management)**:
+6. **데이터 관리 (Data Management)**:
    - **북마크 백업 (JSON 내보내기)**: `startpage-bookmarks-YYYYMMDD.json` 파일 생성 및 즉시 다운로드.
    - **북마크 복원 (JSON 가져오기)**: 파일 선택 및 스키마 검증 후 일괄 복원.
    - **기본값 초기화**: 확인 대화상자(`window.confirm`) 후 기본 대표 5개 링크로 원클릭 리셋.
-4. **도움말 & 정보 (About & Help)**:
+7. **도움말 & 정보 (About & Help)**:
    - 브라우저 시작 페이지 설정 가이드 (웹 주소 / 확장 프로그램 등록).
    - 툴바 별(⭐) 아이콘 미니 팝업 1초 등록 활용 팁.
    - 100% 로컬 스토리지 데이터 보안 안내.

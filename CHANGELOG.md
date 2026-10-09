@@ -3,6 +3,14 @@
 모든 주요 변경 사항은 이 문서에 기록됩니다.
 이 프로젝트는 [Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
 
+## [1.22.1] - 2026-10-09
+
+### 🐛 버그 수정 (Bug Fix)
+- **설정 모달 테마 기본값(`system`) 주입 및 스토리지 마이그레이션 자동 병합 (`hooks/useLocalStorage.ts`, `components/SettingsModal.tsx`, `PRD.md`)**:
+  - `useLocalStorage`에서 스토리지 데이터 로딩 시 `initialValue`(`DEFAULT_SETTINGS`)와 저장된 객체를 자동 병합(`mergeWithInitial`)하여, 기존 스토리지에 `theme` 필드가 누락되어 있던 경우에도 `theme: 'system'` 기본값이 상태 및 스토리지에 명시적으로 주입·저장되도록 개선
+  - `SettingsModal` 세그먼트 버튼 활성화 로직에 `settings?.theme || 'system'` 방어 코드를 적용하여 어떤 상황에서도 '시스템' 버튼이 미선택되는 UI 결함 원천 차단
+  - 신규 설정 속성 추가 시 하위 호환성을 보장하는 단위 테스트 및 모달 폴백 단위 테스트 추가
+
 ## [1.22.0] - 2026-10-04
 
 ### ✨ 신규 기능 (Feature)

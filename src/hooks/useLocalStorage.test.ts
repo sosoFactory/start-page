@@ -34,4 +34,26 @@ describe('useLocalStorage 훅 단위 테스트 (TDD Seam)', () => {
     expect(result.current[0]).toEqual({ name: '강남', count: 20 });
     expect(JSON.parse(localStorage.getItem('test_obj') || '{}')).toEqual({ name: '강남', count: 20 });
   });
+
+  it('기존 저장된 객체에 새로운 설정 키가 누락되어 있을 때 initialValue 기본값을 자동 병합 및 주입해야 한다', () => {
+    // 기존 스토리지에는 theme 속성이 없는 구버전 설정이 저장되어 있음
+    localStorage.setItem('saniti_settings_test', JSON.stringify({ openInNewTab: true, showClock: false }));
+
+    const defaultSettings = {
+      theme: 'system',
+      openInNewTab: false,
+      showClock: true,
+      clockFormat: '24h'
+    };
+
+    const { result } = renderHook(() => useLocalStorage('saniti_settings_test', defaultSettings));
+
+    // initialValue의 기본값(theme: 'system', clockFormat: '24h')과 저장된 값(openInNewTab: true, showClock: false)이 자동 병합되어야 함
+    expect(result.current[0]).toEqual({
+      theme: 'system',
+      openInNewTab: true,
+      showClock: false,
+      clockFormat: '24h'
+    });
+  });
 });

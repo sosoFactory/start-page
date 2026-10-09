@@ -147,7 +147,7 @@ export const SettingsModal: React.FC<Props> = ({
             <div className="settings-segmented-control">
               <button
                 type="button"
-                className={`segmented-btn ${settings.theme === 'system' ? 'active' : ''}`}
+                className={`segmented-btn ${(settings?.theme || 'system') === 'system' ? 'active' : ''}`}
                 onClick={() => onUpdateSettings({ ...settings, theme: 'system' })}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
               >
@@ -156,7 +156,7 @@ export const SettingsModal: React.FC<Props> = ({
               </button>
               <button
                 type="button"
-                className={`segmented-btn ${settings.theme === 'light' ? 'active' : ''}`}
+                className={`segmented-btn ${(settings?.theme || 'system') === 'light' ? 'active' : ''}`}
                 onClick={() => onUpdateSettings({ ...settings, theme: 'light' })}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
               >
@@ -165,7 +165,7 @@ export const SettingsModal: React.FC<Props> = ({
               </button>
               <button
                 type="button"
-                className={`segmented-btn ${settings.theme === 'dark' ? 'active' : ''}`}
+                className={`segmented-btn ${(settings?.theme || 'system') === 'dark' ? 'active' : ''}`}
                 onClick={() => onUpdateSettings({ ...settings, theme: 'dark' })}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
               >

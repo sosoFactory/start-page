@@ -51,4 +51,17 @@ describe('SettingsModal', () => {
       theme: 'light'
     });
   });
+
+  it('theme 속성이 누락되거나 undefined인 경우 시스템 버튼이 기본 활성(active) 상태여야 한다', () => {
+    const incompleteSettings = { ...DEFAULT_SETTINGS, theme: undefined as any };
+    render(<SettingsModal {...defaultProps} settings={incompleteSettings} />);
+
+    const systemBtn = screen.getByText('시스템').closest('button');
+    const lightBtn = screen.getByText('라이트').closest('button');
+    const darkBtn = screen.getByText('다크').closest('button');
+
+    expect(systemBtn?.classList.contains('active')).toBe(true);
+    expect(lightBtn?.classList.contains('active')).toBe(false);
+    expect(darkBtn?.classList.contains('active')).toBe(false);
+  });
 });
